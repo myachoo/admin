@@ -1,4 +1,4 @@
-package com.kzn.cindy
+package com.kzn.beauti
 
 import io.flutter.embedding.android.FlutterActivity
 
