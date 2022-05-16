@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:kozarni_ecome/controller/home_controller.dart';
 import 'package:kozarni_ecome/data/constant.dart';
 import 'package:kozarni_ecome/routes/routes.dart';
+import 'package:kozarni_ecome/screen/shop.dart';
 import 'package:kozarni_ecome/screen/view/brand.dart';
 import 'package:kozarni_ecome/screen/view/cart.dart';
 import 'package:kozarni_ecome/screen/view/favourite.dart';
@@ -18,8 +19,9 @@ import 'view/profile.dart';
 
 List<Widget> _template = [
   HomeView(),
-  BrandView(),
-  //HotView(),
+  Shop(),
+  HotView(),
+  // BrandView(),
   CartView(),
   FavouriteView(),
   ProfileView(),
