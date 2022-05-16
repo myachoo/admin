@@ -106,112 +106,136 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: appBarColor,
         elevation: 0,
         title: Text(
-          "𝐂𝐢𝐧𝐝𝐲 Export & Clothing Brand Fashion",
+          "DELUX BEAUTI",
           style: TextStyle(
-            fontSize: 14,
+            fontSize: 18,
             fontWeight: FontWeight.bold,
             color: appBarTitleColor,
+            wordSpacing: 2,
+            letterSpacing: 2,
           ),
         ),
         // centerTitle: true,
         actions: [
-          // InkWell(
-          //   onTap: () {
-          //     ///TODO
-          //   },
-          //   child: Container(
-          //     margin: EdgeInsets.only(right: 10, top: 10, bottom: 10),
-          //     padding: EdgeInsets.only(left: 10, right: 10),
-          //     alignment: Alignment.center,
-          //     decoration: BoxDecoration(
-          //         color: Colors.white,
-          //         borderRadius: BorderRadius.circular(7),
-          //         boxShadow: [
-          //           BoxShadow(
-          //             color: Colors.grey[200]!,
-          //             spreadRadius: 1,
-          //             offset: Offset(0, 1),
-          //           )
-          //         ]),
-          //     child: Icon(
-          //       Icons.search,
-          //       color: Colors.black,
-          //     ),
-          //   ),
-          // )
-          ElevatedButton(
-            style: ButtonStyle(
-              alignment: Alignment.center,
-              backgroundColor: MaterialStateProperty.all(Colors.white),
-              elevation: MaterialStateProperty.resolveWith<double>(
-                // As you said you dont need elevation. I'm returning 0 in both case
-                (Set<MaterialState> states) {
-                  if (states.contains(MaterialState.disabled)) {
-                    return 0;
-                  }
-                  return 0; // Defer to the widget's default.
-                },
+          SizedBox(
+            width: 45,
+            child: ElevatedButton(
+              style: ButtonStyle(
+                alignment: Alignment.center,
+                backgroundColor: MaterialStateProperty.all(Colors.white),
+                elevation: MaterialStateProperty.resolveWith<double>(
+                  // As you said you dont need elevation. I'm returning 0 in both case
+                  (Set<MaterialState> states) {
+                    if (states.contains(MaterialState.disabled)) {
+                      return 0;
+                    }
+                    return 0; // Defer to the widget's default.
+                  },
+                ),
               ),
-            ),
-            onPressed: () => Get.toNamed(searchScreen),
-            child: FaIcon(
-              FontAwesomeIcons.search,
-              color: Colors.black,
-              size: 20,
+              onPressed: () => Get.toNamed(searchScreen),
+              child: FaIcon(
+                FontAwesomeIcons.search,
+                color: Colors.black,
+                size: 23,
+              ),
             ),
           ),
 
-          ElevatedButton(
-            style: ButtonStyle(
-              alignment: Alignment.center,
-              backgroundColor: MaterialStateProperty.all(Colors.white),
-              elevation: MaterialStateProperty.resolveWith<double>(
-                // As you said you dont need elevation. I'm returning 0 in both case
-                (Set<MaterialState> states) {
-                  if (states.contains(MaterialState.disabled)) {
-                    return 0;
-                  }
-                  return 0; // Defer to the widget's default.
-                },
+          SizedBox(
+            width: 45,
+            child: ElevatedButton(
+              style: ButtonStyle(
+                alignment: Alignment.center,
+                backgroundColor: MaterialStateProperty.all(Colors.white),
+                elevation: MaterialStateProperty.resolveWith<double>(
+                  // As you said you dont need elevation. I'm returning 0 in both case
+                  (Set<MaterialState> states) {
+                    if (states.contains(MaterialState.disabled)) {
+                      return 0;
+                    }
+                    return 0; // Defer to the widget's default.
+                  },
+                ),
+              ),
+              onPressed: () async {
+                try {
+                  await launch('https://m.me/Cindy.Branded.Export.Fashion');
+                } catch (e) {
+                  print(e);
+                }
+              },
+              child: FaIcon(
+                FontAwesomeIcons.commentDots,
+                color: Colors.black,
+                size: 23,
               ),
             ),
-            onPressed: () async {
-              try {
-                await launch('https://m.me/Cindy.Branded.Export.Fashion');
-              } catch (e) {
-                print(e);
-              }
-            },
-            child: FaIcon(
-              FontAwesomeIcons.facebookMessenger,
-              color: Colors.blue,
-              size: 20,
+          ),
+
+          SizedBox(
+            width: 45,
+            child: ElevatedButton(
+              style: ButtonStyle(
+                alignment: Alignment.center,
+                backgroundColor: MaterialStateProperty.all(Colors.white),
+                elevation: MaterialStateProperty.resolveWith<double>(
+                  // As you said you dont need elevation. I'm returning 0 in both case
+                      (Set<MaterialState> states) {
+                    if (states.contains(MaterialState.disabled)) {
+                      return 0;
+                    }
+                    return 0; // Defer to the widget's default.
+                  },
+                ),
+              ),
+              onPressed: () async {
+                try {
+                  await launch('https://m.me/Cindy.Branded.Export.Fashion');
+                } catch (e) {
+                  print(e);
+                }
+              },
+              child: FaIcon(
+                FontAwesomeIcons.heart,
+                color: Colors.black,
+                size: 23,
+              ),
             ),
           ),
-          // Container(
-          //   margin: EdgeInsets.only(
-          //     top: 7,
-          //     bottom: 10,
-          //     right: 7,
-          //   ),
-          //   child: ElevatedButton(
-          //     style: ButtonStyle(
-          //       backgroundColor: MaterialStateProperty.all(Colors.white),
-          //       overlayColor: MaterialStateProperty.all(Colors.black12),
-          //     ),
-          //     onPressed: () async {
-          //       try {
-          //         await launch('https://m.me/begoniazue');
-          //       } catch (e) {
-          //         print(e);
-          //       }
-          //     },
-          //     child: FaIcon(
-          //       FontAwesomeIcons.facebookMessenger,
-          //       color: Colors.blue,
-          //     ),
-          //   ),
-          // )
+
+          SizedBox(
+            width: 45,
+            child: ElevatedButton(
+              style: ButtonStyle(
+                alignment: Alignment.center,
+                backgroundColor: MaterialStateProperty.all(Colors.white),
+                elevation: MaterialStateProperty.resolveWith<double>(
+                  // As you said you dont need elevation. I'm returning 0 in both case
+                      (Set<MaterialState> states) {
+                    if (states.contains(MaterialState.disabled)) {
+                      return 0;
+                    }
+                    return 0; // Defer to the widget's default.
+                  },
+                ),
+              ),
+              onPressed: () async {
+                try {
+                  await launch('https://m.me/Cindy.Branded.Export.Fashion');
+                } catch (e) {
+                  print(e);
+                }
+              },
+              child: FaIcon(
+                FontAwesomeIcons.shoppingBasket,
+                color: Colors.black,
+                size: 23,
+              ),
+            ),
+          ),
+
+
         ],
       ),
       body: Obx(
