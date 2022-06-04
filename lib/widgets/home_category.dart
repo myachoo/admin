@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kozarni_ecome/controller/home_controller.dart';
 import 'package:kozarni_ecome/data/constant.dart';
+import 'package:kozarni_ecome/data/mock.dart';
 
 List<String> category = [
   'all',
@@ -21,13 +22,10 @@ class HomeCategory extends StatelessWidget {
       height: 40,
 
       // color: Colors.green,
-      child: Obx(
-        () => controller.categoryList().isEmpty
-            ? Container()
-            : ListView.builder(
+      child:  ListView.builder(
                 padding: EdgeInsets.only(left: 20),
                 scrollDirection: Axis.horizontal,
-                itemCount: controller.categoryList().length,
+                itemCount: categories.length,
                 itemBuilder: (_, i) => Container(
                   margin: EdgeInsets.only(
                     top: 3,
@@ -36,13 +34,14 @@ class HomeCategory extends StatelessWidget {
                   ),
                   child: Obx(
                     () => ElevatedButton(
+                    
                       style: ButtonStyle(
                         backgroundColor: controller.category.value ==
-                                controller.categoryList()[i]
+                                categories[i]
                             ? MaterialStateProperty.all(homeIndicatorColor)
                             : MaterialStateProperty.all(Colors.white),
                         foregroundColor: controller.category.value ==
-                                controller.categoryList()[i]
+                                categories[i]
                             ? MaterialStateProperty.all(Colors.white)
                             : MaterialStateProperty.all(Colors.black),
                         shape: MaterialStateProperty.all(
@@ -52,16 +51,16 @@ class HomeCategory extends StatelessWidget {
                         ),
                       ),
                       onPressed: () {
-                        controller.changeCat(controller.categoryList()[i]);
+                        controller.changeCat(categories[i]);
                       },
                       child: Text(
-                        controller.categoryList()[i],
+                        categories[i],
+                        style: TextStyle(color: Colors.black,),
                       ),
                     ),
                   ),
                 ),
-              ),
-      ),
+      )
     );
   }
 }

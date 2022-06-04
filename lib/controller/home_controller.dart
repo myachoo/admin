@@ -24,6 +24,7 @@ class HomeController extends GetxController {
   final Database _database = Database();
   final Api _api = Api();
   final ImagePicker _imagePicker = ImagePicker();
+  Rxn<AuthUser?> currentUser = Rxn<AuthUser?>(null);
 
   final RxBool authorized = false.obs;
   final Rx<AuthUser> user = AuthUser().obs;
