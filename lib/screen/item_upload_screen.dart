@@ -5,6 +5,9 @@ import 'package:kozarni_ecome/controller/home_controller.dart';
 import 'package:kozarni_ecome/controller/upload_controller.dart';
 import 'package:kozarni_ecome/data/constant.dart';
 import 'package:kozarni_ecome/model/item.dart';
+import 'package:kozarni_ecome/widgets/home_category.dart';
+import 'package:kozarni_ecome/widgets/status_button_list.dart';
+import 'package:kozarni_ecome/widgets/tag_button_list.dart';
 
 class UploadItem extends StatefulWidget {
   const UploadItem({Key? key}) : super(key: key);
@@ -19,24 +22,7 @@ class _UploadItemState extends State<UploadItem> {
 
   @override
   void dispose() {
-    homecontroller.setEditItem(
-      ItemModel(
-        photo: '',
-        photo2: '',
-        photo3: '',
-        brand: '',
-        deliverytime: '',
-        discountprice: 0,
-        name: '',
-        price: 0,
-        desc: '',
-        color: '',
-        size: '',
-        star: 0,
-        category: '',
-        isOwnBrand: false,
-      ),
-    );
+    homecontroller.setEditItem(null);
     super.dispose();
   }
 
@@ -47,8 +33,35 @@ class _UploadItemState extends State<UploadItem> {
       appBar: AppBar(
         title: Text(
           "𝐂𝐢𝐧𝐝𝐲 Branded Export Fashion",
-          style: TextStyle(color: Colors.black, fontSize: 14),
-        ),
+          style: TextStyle(color: Colors.black, fontSize: 14)),
+        actions: [
+          if (!(homecontroller.editItem.value == null)) ...[
+            Padding(
+              padding: const EdgeInsets.only(
+                top: 12.0,
+                bottom: 12.0,
+              ),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: homeIndicatorColor,
+                ),
+                child: Text("Delete"),
+                onPressed: () =>
+                    controller.delete(homecontroller.editItem.value!.id),
+              ),
+            ),
+          ],
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                primary: homeIndicatorColor,
+              ),
+              child: Text("Save"),
+              onPressed: () => controller.upload(),
+            ),
+          ),
+        ],
         elevation: 5,
         backgroundColor: detailBackgroundColor,
         leading: IconButton(
@@ -63,41 +76,40 @@ class _UploadItemState extends State<UploadItem> {
         key: controller.form,
         child: ListView(
           children: [
-            //Option OwnBrand Or Not
-            SizedBox(
-              height: 50,
-              child: GetBuilder<HomeController>(builder: (con) {
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    //Export Brand
-                    ChoiceChip(
-                      selectedColor: Colors.black,
-                      label: Text(
-                        "Export Brand",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      selected: con.isOwnBrand == false,
-                      onSelected: (selected) =>
-                          con.changeOwnBrandOrNot(false, true),
-                    ),
-                    //Space
-                    const SizedBox(width: 10),
-                    //Own Brand
-                    ChoiceChip(
-                      selectedColor: Colors.black,
-                      label: Text(
-                        "Own Brand",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      selected: con.isOwnBrand == true,
-                      onSelected: (selected) =>
-                          con.changeOwnBrandOrNot(true, true),
-                    ),
-                  ],
-                );
-              }),
+            Padding(
+              padding: const EdgeInsets.only(left: 20,top: 10,bottom: 5),
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: Text(
+                  "Category:",
+                ),
+              ),
             ),
+            // Category
+            HomeCategory(),
+            Padding(
+              padding: const EdgeInsets.only(left: 20,top: 10,bottom: 5),
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: Text(
+                  "Status:",
+                ),
+              ),
+            ),
+            // Status
+            StatusButtonList(),
+            Padding(
+              padding: const EdgeInsets.only(left: 20,top: 10,bottom: 5),
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: Text(
+                  "Tags:",
+                ),
+              ),
+            ),
+            //Tabs
+            TagButtonList(),
+                    //Photo1 
             Padding(
               padding: EdgeInsets.only(
                 top: 20,
@@ -105,15 +117,16 @@ class _UploadItemState extends State<UploadItem> {
                 right: 20,
               ),
               child: TextFormField(
-                controller: controller.photoController,
-                validator: controller.validator,
+                selectionControls: MaterialTextSelectionControls(),
+                controller: controller.photo1Controller,
+                validator: (value) => controller.validator(value: value,isOptional: false),
                 decoration: InputDecoration(
                   hintText: 'Photo Link',
                   border: OutlineInputBorder(),
                 ),
               ),
             ),
-
+           //Photo2
             Padding(
               padding: EdgeInsets.only(
                 top: 20,
@@ -121,15 +134,16 @@ class _UploadItemState extends State<UploadItem> {
                 right: 20,
               ),
               child: TextFormField(
+                selectionControls: MaterialTextSelectionControls(),
                 controller: controller.photo2Controller,
-                validator: controller.validator,
+                validator: (value) => controller.validator(value: value,isOptional: false),
                 decoration: InputDecoration(
                   hintText: 'Photo Link 2',
                   border: OutlineInputBorder(),
                 ),
               ),
             ),
-
+            //Photo3
             Padding(
               padding: EdgeInsets.only(
                 top: 20,
@@ -137,15 +151,16 @@ class _UploadItemState extends State<UploadItem> {
                 right: 20,
               ),
               child: TextFormField(
+                selectionControls: MaterialTextSelectionControls(),
                 controller: controller.photo3Controller,
-                validator: controller.validator,
+                validator: (value) => controller.validator(value: value,isOptional: false),
                 decoration: InputDecoration(
                   hintText: 'Photo Link 3',
                   border: OutlineInputBorder(),
                 ),
               ),
             ),
-
+           //Name 
             Padding(
               padding: EdgeInsets.only(
                 top: 20,
@@ -154,14 +169,14 @@ class _UploadItemState extends State<UploadItem> {
               ),
               child: TextFormField(
                 controller: controller.nameController,
-                validator: controller.validator,
+                validator: (value) => controller.validator(value: value,isOptional: false),
                 decoration: InputDecoration(
                   hintText: 'Product အမည်',
                   border: OutlineInputBorder(),
                 ),
               ),
             ),
-
+            //Description
             Padding(
               padding: EdgeInsets.only(
                 top: 20,
@@ -175,15 +190,15 @@ class _UploadItemState extends State<UploadItem> {
                 minLines: 1,
                 maxLines: null,
 
-                controller: controller.desc,
-                validator: controller.validator,
+                controller: controller.descriptionController,
+                validator: (value) => controller.validator(value: value,isOptional: false),
                 decoration: InputDecoration(
                   hintText: 'အသေးစိတ်ဖော်ပြချက်',
                   border: OutlineInputBorder(),
                 ),
               ),
             ),
-
+            //Price
             Padding(
               padding: EdgeInsets.only(
                 top: 20,
@@ -192,15 +207,15 @@ class _UploadItemState extends State<UploadItem> {
               ),
               child: TextFormField(
                 controller: controller.priceController,
-                validator: controller.validator,
+                validator: (value) => controller.validator(value: value,isOptional: false),
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
-                  hintText: 'လက်လီ ( ၁ ) ထည်ဈေးနှုန်း',
+                  hintText: 'ဈေးနှုန်း',
                   border: OutlineInputBorder(),
                 ),
               ),
             ),
-
+            //Discount
             Padding(
               padding: EdgeInsets.only(
                 top: 20,
@@ -208,48 +223,16 @@ class _UploadItemState extends State<UploadItem> {
                 right: 20,
               ),
               child: TextFormField(
-                controller: controller.brandController,
-                validator: controller.validator,
-                decoration: InputDecoration(
-                  hintText: '......ထည် ဈေးနှုန်း (Wholesale) ရေးပေးပါ',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-            ),
-
-            Padding(
-              padding: EdgeInsets.only(
-                top: 20,
-                left: 20,
-                right: 20,
-              ),
-              child: TextFormField(
-                controller: controller.deliverytimeController,
-                validator: controller.validator,
-                decoration: InputDecoration(
-                  hintText: 'လက်ကား ပုံမှန် ဈေးနှုန်း',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-            ),
-
-            Padding(
-              padding: EdgeInsets.only(
-                top: 20,
-                left: 20,
-                right: 20,
-              ),
-              child: TextFormField(
-                controller: controller.discountpriceController,
-                validator: controller.validator,
+                controller: controller.discountPriceController,
+                validator: (value) => controller.validator(value: value,isOptional: true),
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
-                  hintText: 'လက်ကားအတွက် လျှော့ထားသော ဈေးနှုန်း',
+                  hintText: 'အထူးလျော့ဈေး',
                   border: OutlineInputBorder(),
                 ),
               ),
             ),
-
+            //Color
             Padding(
               padding: EdgeInsets.only(
                 top: 20,
@@ -258,13 +241,14 @@ class _UploadItemState extends State<UploadItem> {
               ),
               child: TextFormField(
                 controller: controller.colorController,
-                validator: controller.validator,
+                validator: (value) => controller.validator(value: value,isOptional: false),
                 decoration: InputDecoration(
                   hintText: 'အရောင်',
                   border: OutlineInputBorder(),
                 ),
               ),
             ),
+            //Size
             Padding(
               padding: EdgeInsets.only(
                 top: 20,
@@ -273,64 +257,47 @@ class _UploadItemState extends State<UploadItem> {
               ),
               child: TextFormField(
                 controller: controller.sizeController,
-                validator: controller.validator,
+                validator: (value) => controller.validator(value: value,isOptional: false),
                 decoration: InputDecoration(
                   hintText: 'အရွယ်အစား',
                   border: OutlineInputBorder(),
                 ),
               ),
             ),
-            Padding(
+            //Reward Point
+             Padding(
               padding: EdgeInsets.only(
                 top: 20,
                 left: 20,
                 right: 20,
               ),
               child: TextFormField(
-                controller: controller.starController,
-                validator: controller.validator,
+                controller: controller.requirePointController,
+                validator: (value) => controller.validator(value: value,isOptional: true),
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
-                  hintText: 'Star',
+                  hintText: 'reward point',
                   border: OutlineInputBorder(),
                 ),
               ),
             ),
-            Padding(
+            //Delivery Time
+             Padding(
               padding: EdgeInsets.only(
                 top: 20,
                 left: 20,
                 right: 20,
               ),
               child: TextFormField(
-                controller: controller.categoryController,
-                validator: controller.validator,
+                controller: controller.deliveryTimeController,
+                validator: (value) => controller.validator(value: value,isOptional: false),
                 decoration: InputDecoration(
-                  hintText: 'အမျိုးအစား',
+                  hintText: 'Delivery Time',
                   border: OutlineInputBorder(),
-                ),
-              ),
-            ),
-            Container(
-              height: 50,
-              margin: EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 20),
-              child: ElevatedButton(
-                style: buttonStyle,
-                onPressed: controller.upload,
-                child: Obx(
-                  () => controller.isUploading.value
-                      ? CircularProgressIndicator(
-                          color: scaffoldBackground,
-                        )
-                      : Text(homecontroller.editItem.value.id != null
-                          ? "Edit"
-                          : "upload"),
                 ),
               ),
             ),
           ],
-        ),
-      ),
-    );
+    )));
   }
 }

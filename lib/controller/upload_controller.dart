@@ -6,31 +6,71 @@ import 'package:kozarni_ecome/data/constant.dart';
 import 'package:kozarni_ecome/model/item.dart';
 import 'package:kozarni_ecome/service/api.dart';
 import 'package:kozarni_ecome/service/database.dart';
+import 'package:kozarni_ecome/widgets/show_loading/show_loading.dart';
+import 'package:uuid/uuid.dart';
+
+import '../model/product.dart';
 
 class UploadController extends GetxController {
   final RxBool isUploading = false.obs;
-
   final HomeController _homeController = Get.find();
+  final RxMap<String,String> tagsMap = <String,String>{}.obs;
+  //Controller
+  TextEditingController photo1Controller = TextEditingController();
+  TextEditingController photo2Controller = TextEditingController();
+  TextEditingController photo3Controller = TextEditingController();
+  TextEditingController nameController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
+  TextEditingController sizeController = TextEditingController();
+  TextEditingController colorController = TextEditingController();
+  TextEditingController priceController = TextEditingController();
+  TextEditingController discountPriceController = TextEditingController();
+  TextEditingController requirePointController = TextEditingController();
+  TextEditingController deliveryTimeController = TextEditingController();
+
+  String advertisementID = "";
+  var status = "".obs;
+  /**************************** */
+
+  void changeStatus(String value){
+    status.value = value;
+  }
+
+  void addOrRemoveTag(String key,String value){
+    debugPrint("******$key");
+    if(tagsMap.containsKey(key)){
+      tagsMap.remove(key);
+    }else{
+      tagsMap[key] = value;
+    }
+    debugPrint("********${tagsMap.length}");
+  }
 
   @override
   void onInit() {
     super.onInit();
 
-    if (_homeController.editItem.value.id != null) {
-      photoController.text = _homeController.editItem.value.photo;
-      photo2Controller.text = _homeController.editItem.value.photo2;
-      photo3Controller.text = _homeController.editItem.value.photo3;
-      nameController.text = _homeController.editItem.value.name;
-      deliverytimeController.text = _homeController.editItem.value.deliverytime;
-      brandController.text = _homeController.editItem.value.brand;
-      priceController.text = _homeController.editItem.value.price.toString();
-      discountpriceController.text =
-          _homeController.editItem.value.discountprice.toString();
-      colorController.text = _homeController.editItem.value.color;
-      sizeController.text = _homeController.editItem.value.size;
-      starController.text = _homeController.editItem.value.star.toString();
-      categoryController.text = _homeController.editItem.value.category;
-      desc.text = _homeController.editItem.value.desc;
+    if (!(_homeController.editItem.value == null)) {
+      final editItem = _homeController.editItem.value!;
+     photo1Controller.text = editItem.photo1;
+     photo2Controller.text = editItem.photo2;
+     photo3Controller.text = editItem.photo3;
+     nameController.text = editItem.name;
+     descriptionController.text = editItem.description;
+     sizeController.text = editItem.size;
+     colorController.text = editItem.color;
+     priceController.text = editItem.price.toString();
+     discountPriceController.text = editItem.discountPrice.toString();
+     requirePointController.text = editItem.requirePoint.toString();
+     advertisementID = editItem.advertisementID ?? "";
+     deliveryTimeController.text = editItem.deliveryTime ?? "";
+     status.value = editItem.status;
+     _homeController.changeCat(editItem.category);
+     if(editItem.tags.isNotEmpty){
+       editItem.tags.forEach((element) { 
+         tagsMap.putIfAbsent(element, () => element);
+         });
+     }
     }
   }
 
@@ -41,20 +81,7 @@ class UploadController extends GetxController {
   final RxString filePath = ''.obs;
 
   final GlobalKey<FormState> form = GlobalKey();
-
-  final TextEditingController photoController = TextEditingController();
-  final TextEditingController photo2Controller = TextEditingController();
-  final TextEditingController photo3Controller = TextEditingController();
-  final TextEditingController deliverytimeController = TextEditingController();
-  final TextEditingController brandController = TextEditingController();
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController desc = TextEditingController();
-  final TextEditingController priceController = TextEditingController();
-  final TextEditingController discountpriceController = TextEditingController();
-  final TextEditingController colorController = TextEditingController();
-  final TextEditingController sizeController = TextEditingController();
-  final TextEditingController starController = TextEditingController();
-  final TextEditingController categoryController = TextEditingController();
+ 
 
   Future<void> pickImage() async {
     try {
@@ -66,92 +93,99 @@ class UploadController extends GetxController {
     }
   }
 
-  String? validator(String? data) => data?.isEmpty == true ? 'empty' : null;
+  String? validator({required String? value,required bool isOptional}){
+    if((value == null || value.isEmpty) && isOptional){
+      return null;
+    }else if(value == null || value.isEmpty){
+      return "cann't be empty";
+    }else{
+      return null;
+    }
+  }
+ 
+  String? requirePointValidator(String? data){
+    if((status == rewardStatus) && ((data == null) || (data.isEmpty))){
+      return "cann't be empty";
+    }else if((status == rewardStatus) && ((int.tryParse(data ?? "0") ?? 0) <= 0)){
+      return "must be greater than 0";
+    }else if(((int.tryParse(data ?? "0") ?? 0) > 0) && ((
+      status != rewardStatus
+    ))){
+      return "you must be choose 'Beauty Insider Rewards' status";
+    }else{
+      return null;
+    }
+  }
+
+  Future<void> delete(String productID) async{
+    showLoading();
+    await _database.delete(itemCollection, path: productID);
+    hideLoading();
+  }
 
   Future<void> upload() async {
-    if (isUploading.value) return;
+    showLoading();
     try {
       isUploading.value = true;
       if (form.currentState?.validate() == true
-          //  &&
-
-          // filePath.value.isNotEmpty
-          ) {
+          && _homeController.category.isNotEmpty && status.isNotEmpty) {
         final DateTime dateTime = DateTime.now();
-
-        // await _api.uploadFile(
-        //   filePath.value,
-        //   folder: itemUrl,
-        //   fileName:
-        //       "${dateTime.year}${dateTime.month}${dateTime.day}${dateTime.hour}${dateTime.minute}${dateTime.second}",
-        // );
-
-        if (_homeController.editItem.value.id != null) {
+        if (_homeController.editItem.value != null) { //For Update
           await _database.update(
-            _homeController.isOwnBrand ? brandCollection : itemCollection,
-            path: _homeController.editItem.value.id!,
+            itemCollection,
+            path: _homeController.editItem.value!.id,
             data: _homeController.editItem.value
-                .copyWith(
-                  newPhoto: photoController.text,
-                  newPhoto2: photo2Controller.text,
-                  newPhoto3: photo3Controller.text,
-                  newDeliveryTime: deliverytimeController.text,
-                  newBrand: brandController.text,
-                  newName: nameController.text,
-                  newColor: colorController.text,
-                  newPrice: int.parse(priceController.text),
-                  newDiscountPrice: int.parse(discountpriceController.text),
-                  newSize: sizeController.text,
-                  newStar: int.parse(starController.text),
-                  des: desc.text,
-                  newCategory: categoryController.text,
-                  newIsOwnBrand: _homeController.isOwnBrand,
+                !.copyWith(
+                  photo1: photo1Controller.text,
+                  photo2: photo2Controller.text,
+                  photo3: photo3Controller.text,
+                  name: nameController.text,
+                  description: descriptionController.text,
+                  size: sizeController.text,
+                  color: colorController.text,
+                  price: int.parse(priceController.text),
+                  discountPrice: int.tryParse(discountPriceController.text),
+                  requirePoint: int.tryParse(requirePointController.text),
+                  advertisementID: advertisementID,
+                  status: status.value,
+                  category: _homeController.category.value,
+                  tags: tagsMap.values.map((e) => e).toList()
                 )
                 .toJson(),
           );
-        } else {
+        } else {//For Upload
           await _database.write(
-            _homeController.isOwnBrand ? brandCollection : itemCollection,
-            data: ItemModel(
-              photo: photoController.text,
-              photo2: photo2Controller.text,
-              photo3: photo3Controller.text,
-              // "${dateTime.year}${dateTime.month}${dateTime.day}${dateTime.hour}${dateTime.minute}${dateTime.second}",
-              name: nameController.text,
-              brand: brandController.text,
-              deliverytime: deliverytimeController.text,
-              desc: desc.text,
-              price: int.parse(priceController.text),
-              discountprice: int.parse(discountpriceController.text),
-              color: colorController.text,
-              size: sizeController.text,
-              star: int.parse(starController.text),
-              category: categoryController.text,
-              isOwnBrand: _homeController.isOwnBrand,
+            itemCollection,
+            data: Product(
+              id: Uuid().v1(),
+              photo1: photo1Controller.text,
+                  photo2: photo2Controller.text,
+                  photo3: photo3Controller.text,
+                  name: nameController.text,
+                  description: descriptionController.text,
+                  size: sizeController.text,
+                  color: colorController.text,
+                  price: int.parse(priceController.text),
+                  discountPrice: int.tryParse(discountPriceController.text),
+                  requirePoint: int.tryParse(requirePointController.text),
+                  advertisementID: advertisementID,
+                  status: status.value,
+                  category: _homeController.category.value,
+                  tags: tagsMap.values.map((e) => e).toList(),
+                  dateTime: DateTime.now(),
             ).toJson(),
           );
         }
+        hideLoading();
         isUploading.value = false;
         Get.snackbar('Success', 'Uploaded successfully!');
         filePath.value = '';
-        photoController.clear();
-        photo2Controller.clear();
-        photo3Controller.clear();
-        brandController.clear();
-        deliverytimeController.clear();
-        discountpriceController.clear();
-        nameController.clear();
-        desc.clear();
-        priceController.clear();
-        colorController.clear();
-        sizeController.clear();
-        starController.clear();
-        categoryController.clear();
         return;
+      }else{
+        hideLoading();
       }
-      isUploading.value = false;
-      Get.snackbar('Required', 'Image is required');
     } catch (e) {
+      hideLoading();
       isUploading.value = false;
       print("upload error $e");
     }

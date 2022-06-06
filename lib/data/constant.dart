@@ -19,8 +19,22 @@ const String profileCollection = 'profiles';
 const String itemCollection = 'items';
 const String purchaseCollection = 'purchases';
 const String brandCollection = 'brandProducts';
+const String categoryCollection = 'categories';
+const String statusCollection  = 'statusCollection';
+const String advertisementCollection = 'advertisementCollection';
+const String tagsCollection = 'tagsCollection';
 /*const List<String> priceList = [
   '၁ ထည် လက်လီ ဈေးနှုန်း',
   'လက်ကား ဈေးနှုန်း',
 ];*/
 const String boxName = "favouritesBOX";
+
+
+///////////////
+const String hotSale = "Hot Sales";
+const String limitedEditionTag = "LIMITED EDITION";
+const String rewardStatus = "Beauty Insider Rewards";
+
+//
+const String forRewardProducts = "For Reward Products";
+const String forNewProducts = "For New Products";

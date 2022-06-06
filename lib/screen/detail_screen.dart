@@ -18,7 +18,7 @@ class DetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final HomeController controller = Get.find();
-
+    final currentProduct = controller.editItem.value;
     return Scaffold(
       backgroundColor: detailTextBackgroundColor,
       appBar: AppBar(
@@ -26,7 +26,7 @@ class DetailScreen extends StatelessWidget {
         elevation: 0,
         backgroundColor: Colors.white,
         title: Text(
-          controller.selectedItem.value.name,
+          currentProduct!.name,
           style: TextStyle(
               color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16),
         ),
@@ -40,24 +40,24 @@ class DetailScreen extends StatelessWidget {
                 bottomRight: Radius.circular(30),
               ),
               child: Hero(
-                tag: controller.selectedItem.value.photo,
+                tag: currentProduct.photo1,
                 child: CarouselSlider(
                   items: [
                     CachedNetworkImage(
-                      imageUrl: controller.selectedItem.value.photo,
-                      // "$baseUrl$itemUrl${controller.selectedItem.value.photo}/get",
+                      imageUrl: currentProduct.photo1,
+                      // "$baseUrl$itemUrl${currentProduct.photo}/get",
                       height: double.infinity,
                       fit: BoxFit.cover,
                     ),
                     CachedNetworkImage(
-                      imageUrl: controller.selectedItem.value.photo2,
-                      // "$baseUrl$itemUrl${controller.selectedItem.value.photo}/get",
+                      imageUrl: currentProduct.photo2,
+                      // "$baseUrl$itemUrl${currentProduct.photo}/get",
                       height: double.infinity,
                       fit: BoxFit.cover,
                     ),
                     CachedNetworkImage(
-                      imageUrl: controller.selectedItem.value.photo3,
-                      // "$baseUrl$itemUrl${controller.selectedItem.value.photo}/get",
+                      imageUrl: currentProduct.photo3,
+                      // "$baseUrl$itemUrl${currentProduct.photo}/get",
                       height: double.infinity,
                       fit: BoxFit.cover,
                     ),
@@ -110,7 +110,7 @@ class DetailScreen extends StatelessWidget {
                           (index) => Icon(
                             Icons.star,
                             size: 20,
-                            color: index <= controller.selectedItem.value.star
+                            color: index <= (currentProduct.love ?? 0)
                                 ? homeIndicatorColor
                                 : Colors.grey,
                           ),
@@ -122,7 +122,7 @@ class DetailScreen extends StatelessWidget {
                             Hive.box<HiveItem>(boxName).listenable(),
                         builder: (context, Box<HiveItem> box, widget) {
                           final currentObj =
-                              box.get(controller.selectedItem.value.id);
+                              box.get(currentProduct.id);
 
                           if (!(currentObj == null)) {
                             return IconButton(
@@ -138,9 +138,9 @@ class DetailScreen extends StatelessWidget {
                           return IconButton(
                               onPressed: () {
                                 box.put(
-                                    controller.selectedItem.value.id,
+                                    currentProduct.id,
                                     controller.changeHiveItem(
-                                        controller.selectedItem.value));
+                                        currentProduct));
                               },
                               icon: Icon(
                                 Icons.favorite_outline,
@@ -164,7 +164,7 @@ class DetailScreen extends StatelessWidget {
                           fontSize: 16),
                     ),
                     Text(
-                      "${controller.selectedItem.value.price} Kyats",
+                      "${currentProduct.price} Kyats",
                       style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
@@ -179,14 +179,14 @@ class DetailScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      controller.selectedItem.value.brand,
+                      "Brand",
                       style: TextStyle(
                           color: Colors.red,
                           fontWeight: FontWeight.bold,
                           fontSize: 16),
                     ),
                     Text(
-                      controller.selectedItem.value.deliverytime,
+                      "Delevery Time",
                       style: TextStyle(
                           decoration: TextDecoration.lineThrough,
                           color: Colors.red,
@@ -194,7 +194,8 @@ class DetailScreen extends StatelessWidget {
                           fontSize: 16),
                     ),
                     Text(
-                      "${controller.selectedItem.value.discountprice} Kyats",
+                      (currentProduct.discountPrice ?? 0) > 0 ?
+                      "${currentProduct.discountPrice} Kyats" : "no discount price",
                       style: TextStyle(
                           color: Colors.red,
                           fontWeight: FontWeight.bold,
@@ -206,7 +207,7 @@ class DetailScreen extends StatelessWidget {
                   height: 10,
                 ),
                 ExpandedWidget(
-                  text: controller.selectedItem.value.desc,
+                  text: currentProduct.description,
                 ),
                 SizedBox(
                   height: 30,
@@ -296,7 +297,7 @@ class DetailScreen extends StatelessWidget {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(20),
                         child: CachedNetworkImage(
-                          imageUrl: controller.selectedItem.value.photo2,
+                          imageUrl: currentProduct.photo2,
                           width: 150,
                           height: 200,
                           fit: BoxFit.cover,
@@ -315,7 +316,7 @@ class DetailScreen extends StatelessWidget {
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(20),
                               child: CachedNetworkImage(
-                                imageUrl: controller.selectedItem.value.photo3,
+                                imageUrl: currentProduct.photo3,
                                 width: 150,
                                 height: 200,
                                 fit: BoxFit.cover,
@@ -402,16 +403,7 @@ class DetailScreen extends StatelessWidget {
               contentPadding: EdgeInsets.only(left: 20, right: 20, bottom: 10),
               radius: 0,
               title: '',
-              content: AddToCart(
-                priceList: [
-                  controller.selectedItem.value.price,
-                  controller.selectedItem.value.discountprice,
-                ],
-                priceString: [
-                  "၁ ထည် လက်လီ ဈေးနှုန်",
-                  controller.selectedItem.value.brand,
-                ],
-              ),
+              content: Container(),
             );
           },
           child: Text("၀ယ်ယူရန်"),
@@ -422,12 +414,8 @@ class DetailScreen extends StatelessWidget {
 }
 
 class AddToCart extends StatefulWidget {
-  final List<int> priceList;
-  final List<String> priceString;
   const AddToCart({
     Key? key,
-    required this.priceList,
-    required this.priceString,
   }) : super(key: key);
 
   @override
@@ -437,11 +425,11 @@ class AddToCart extends StatefulWidget {
 class _AddToCartState extends State<AddToCart> {
   String? colorValue;
   String? sizeValue;
-  String? priceType;
   final HomeController controller = Get.find();
   @override
   Widget build(BuildContext context) {
     final HomeController controller = Get.find();
+    final currentProduct = controller.editItem.value;
     return Column(
       children: [
         DropdownButtonFormField(
@@ -453,7 +441,7 @@ class _AddToCartState extends State<AddToCart> {
           onChanged: (String? e) {
             colorValue = e;
           },
-          items: controller.selectedItem.value.color
+          items: currentProduct?.color
               .split(',')
               .map((e) => DropdownMenuItem(
                     value: e,
@@ -476,7 +464,7 @@ class _AddToCartState extends State<AddToCart> {
           onChanged: (String? e) {
             sizeValue = e;
           },
-          items: controller.selectedItem.value.size
+          items: currentProduct?.size
               .split(',')
               .map((e) => DropdownMenuItem(
                     value: e,
@@ -491,42 +479,16 @@ class _AddToCartState extends State<AddToCart> {
         SizedBox(
           height: 10,
         ),
-        DropdownButtonFormField(
-          value: priceType,
-          hint: Text(
-            "Price",
-            style: TextStyle(fontSize: 12),
-          ),
-          onChanged: (String? e) {
-            priceType = e;
-          },
-          items: List.generate(
-            widget.priceString.length,
-            (index) => DropdownMenuItem(
-              value: widget.priceString[index],
-              child: Text(
-                widget.priceString[index],
-                style: TextStyle(fontSize: 12),
-              ),
-            ),
-          ),
-        ),
-        SizedBox(
-          height: 10,
-        ),
+        
         Padding(
           padding: const EdgeInsets.only(top: 30),
           child: ElevatedButton(
             style: buttonStyle,
             onPressed: () {
               if (colorValue != null &&
-                  sizeValue != null &&
-                  priceType != null) {
-                int price = (priceType == widget.priceString[0])
-                    ? widget.priceList[0]
-                    : widget.priceList[1];
-                controller.addToCart(controller.selectedItem.value, colorValue!,
-                    sizeValue!, price, priceType!);
+                  sizeValue != null) {
+                // controller.addToCart(currentProduct, colorValue!,
+                //     sizeValue!, price, priceType!);
                 Get.to(HomeScreen());
               }
             },

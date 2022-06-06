@@ -7,12 +7,10 @@ import 'package:kozarni_ecome/controller/home_controller.dart';
 import 'package:kozarni_ecome/data/constant.dart';
 import 'package:kozarni_ecome/routes/routes.dart';
 import 'package:kozarni_ecome/screen/shop.dart';
-import 'package:kozarni_ecome/screen/view/brand.dart';
-import 'package:kozarni_ecome/screen/view/cart.dart';
-import 'package:kozarni_ecome/screen/view/favourite.dart';
 import 'package:kozarni_ecome/screen/view/hot.dart';
 import 'package:kozarni_ecome/screen/view/home.dart';
 import 'package:kozarni_ecome/widgets/bottom_nav.dart';
+import 'package:kozarni_ecome/widgets/home_appbar/home_app_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'view/profile.dart';
@@ -22,8 +20,8 @@ List<Widget> _template = [
   Shop(),
   HotView(),
   // BrandView(),
-  CartView(),
-  FavouriteView(),
+  // CartView(),
+  // FavouriteView(),
   ProfileView(),
 ];
 
@@ -104,142 +102,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final HomeController controller = Get.find();
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: appBarColor,
-        elevation: 0,
-        title: Text(
-          "DELUX BEAUTI",
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: appBarTitleColor,
-            wordSpacing: 2,
-            letterSpacing: 2,
-          ),
-        ),
-        // centerTitle: true,
-        actions: [
-          SizedBox(
-            width: 45,
-            child: ElevatedButton(
-              style: ButtonStyle(
-                alignment: Alignment.center,
-                backgroundColor: MaterialStateProperty.all(Colors.white),
-                elevation: MaterialStateProperty.resolveWith<double>(
-                  // As you said you dont need elevation. I'm returning 0 in both case
-                  (Set<MaterialState> states) {
-                    if (states.contains(MaterialState.disabled)) {
-                      return 0;
-                    }
-                    return 0; // Defer to the widget's default.
-                  },
-                ),
-              ),
-              onPressed: () => Get.toNamed(searchScreen),
-              child: FaIcon(
-                FontAwesomeIcons.search,
-                color: Colors.black,
-                size: 23,
-              ),
-            ),
-          ),
-
-          SizedBox(
-            width: 45,
-            child: ElevatedButton(
-              style: ButtonStyle(
-                alignment: Alignment.center,
-                backgroundColor: MaterialStateProperty.all(Colors.white),
-                elevation: MaterialStateProperty.resolveWith<double>(
-                  // As you said you dont need elevation. I'm returning 0 in both case
-                  (Set<MaterialState> states) {
-                    if (states.contains(MaterialState.disabled)) {
-                      return 0;
-                    }
-                    return 0; // Defer to the widget's default.
-                  },
-                ),
-              ),
-              onPressed: () async {
-                try {
-                  await launch('https://m.me/Cindy.Branded.Export.Fashion');
-                } catch (e) {
-                  print(e);
-                }
-              },
-              child: FaIcon(
-                FontAwesomeIcons.commentDots,
-                color: Colors.black,
-                size: 23,
-              ),
-            ),
-          ),
-
-          SizedBox(
-            width: 45,
-            child: ElevatedButton(
-              style: ButtonStyle(
-                alignment: Alignment.center,
-                backgroundColor: MaterialStateProperty.all(Colors.white),
-                elevation: MaterialStateProperty.resolveWith<double>(
-                  // As you said you dont need elevation. I'm returning 0 in both case
-                      (Set<MaterialState> states) {
-                    if (states.contains(MaterialState.disabled)) {
-                      return 0;
-                    }
-                    return 0; // Defer to the widget's default.
-                  },
-                ),
-              ),
-              onPressed: () async {
-                try {
-                  await launch('https://m.me/Cindy.Branded.Export.Fashion');
-                } catch (e) {
-                  print(e);
-                }
-              },
-              child: FaIcon(
-                FontAwesomeIcons.heart,
-                color: Colors.black,
-                size: 23,
-              ),
-            ),
-          ),
-
-          SizedBox(
-            width: 45,
-            child: ElevatedButton(
-              style: ButtonStyle(
-                alignment: Alignment.center,
-                backgroundColor: MaterialStateProperty.all(Colors.white),
-                elevation: MaterialStateProperty.resolveWith<double>(
-                  // As you said you dont need elevation. I'm returning 0 in both case
-                      (Set<MaterialState> states) {
-                    if (states.contains(MaterialState.disabled)) {
-                      return 0;
-                    }
-                    return 0; // Defer to the widget's default.
-                  },
-                ),
-              ),
-              onPressed: () async {
-                try {
-                  await launch('https://m.me/Cindy.Branded.Export.Fashion');
-                } catch (e) {
-                  print(e);
-                }
-              },
-              child: FaIcon(
-                FontAwesomeIcons.shoppingBasket,
-                color: Colors.black,
-                size: 23,
-              ),
-            ),
-          ),
-
-
-        ],
-      ),
+      appBar: HomeAppBar(),
       body: Obx(
         () => _template[controller.navIndex.value],
       ),

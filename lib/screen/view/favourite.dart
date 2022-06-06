@@ -41,8 +41,8 @@ class _FavouriteViewState extends State<FavouriteView> {
                               onTap: () {
                                 //TODO: GO TO DETAIL AND CHANGE OBJECT
                                 controller.setSelectedItem(
-                                    controller.changeItemModel(hiveItem));
-                                Get.toNamed(detailScreen);
+                                     controller.changeItemModel(hiveItem));
+                                 Get.toNamed(detailScreen);
                               },
                               title: Text(
                                 hiveItem.name,
@@ -55,11 +55,11 @@ class _FavouriteViewState extends State<FavouriteView> {
                               trailing: AspectRatio(
                                 aspectRatio: 1,
                                 child: Hero(
-                                  tag: hiveItem.photo,
+                                  tag: hiveItem.photo1,
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(20.0),
                                     child: CachedNetworkImage(
-                                      imageUrl: hiveItem.photo,
+                                      imageUrl: hiveItem.photo1,
                                       fit: BoxFit.cover,
                                     ),
                                   ),

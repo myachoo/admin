@@ -1,54 +1,68 @@
+import 'dart:core';
+
 import 'package:hive/hive.dart';
 
 part 'hive_item.g.dart';
 
-@HiveType(typeId: 1)
+@HiveType(typeId: 2)
 class HiveItem {
   @HiveField(0)
-  String id;
+  final String id;
   @HiveField(1)
-  String photo;
+  final String photo1;
   @HiveField(2)
-  String photo2;
+  final String photo2;
   @HiveField(3)
-  String photo3;
+  final String photo3;
   @HiveField(4)
-  String desc;
+  final String name;
   @HiveField(5)
-  String name;
+  final String description;
   @HiveField(6)
-  String brand;
+  final int price;
   @HiveField(7)
-  String deliverytime;
+  final int discountPrice;
   @HiveField(8)
-  int price;
+  final String size;
   @HiveField(9)
-  int discountprice;
+  final String color;
   @HiveField(10)
-  String color;
+  final int requirePoint;
   @HiveField(11)
-  String size;
+  String? advertisementID;
   @HiveField(12)
-  int star;
+  final String status;
   @HiveField(13)
-  String category;
+  final String category;
   @HiveField(14)
-  bool isOwnBrand;
+  final List<String> tags;
+  @HiveField(15)
+  final DateTime dateTime;
+  @HiveField(16)
+  String? deliveryTime;
+  @HiveField(17)
+  final int love;
+  @HiveField(18)
+  final List<String> comment;
   HiveItem({
     required this.id,
-    required this.photo,
+    required this.name,
+    required this.photo1,
     required this.photo2,
     required this.photo3,
-    required this.name,
-    required this.brand,
-    required this.deliverytime,
+    required this.description,
     required this.price,
-    required this.discountprice,
-    required this.desc,
-    required this.color,
+    required this.discountPrice,
     required this.size,
-    required this.star,
+    required this.color,
+    required this.requirePoint,
+    required this.advertisementID,
     required this.category,
-    required this.isOwnBrand,
+    required this.status,
+    required this.tags,
+    required this.comment,
+    required this.dateTime,
+    required this.deliveryTime,
+    required this.love,
   });
 }

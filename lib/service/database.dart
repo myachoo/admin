@@ -6,6 +6,8 @@ import 'package:kozarni_ecome/data/constant.dart';
 import 'package:kozarni_ecome/model/purchase.dart';
 import 'package:uuid/uuid.dart';
 
+import '../model/product.dart';
+
 class Database {
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
   final FirebaseStorage _firebaseStorage = FirebaseStorage.instance;

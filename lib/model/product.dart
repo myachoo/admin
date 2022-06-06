@@ -8,18 +8,29 @@ class Product with _$Product{
   factory Product({
   required  String id,
   required String photo1,
-  String? photo2,
-  String? photo3,
+  required String photo2,
+  required String photo3,
   required String name,
   required String description,
   required int price,
+  @JsonKey(defaultValue: 0)
   int? discountPrice,
+  required String size,
+  required String color,
+  @JsonKey(defaultValue: 0)
   int? requirePoint,
-  required String advertisementID,
+  @JsonKey(nullable: true)
+ String? advertisementID,
   required String status,
   required String category,
   required List<String> tags,
   required DateTime dateTime,
+  @JsonKey(nullable: true)
+  String? deliveryTime,
+  @JsonKey(defaultValue: 0)
+  int? love,
+  @JsonKey(defaultValue: [])
+  List<String>? comment,
   }) = _Product;
 
   factory Product.fromJson(Map<String,dynamic> json) => _$ProductFromJson(json);

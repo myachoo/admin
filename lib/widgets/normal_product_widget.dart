@@ -9,7 +9,9 @@ class NormalProductWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return  ConstrainedBox(
-                constraints: BoxConstraints(),
+                constraints: BoxConstraints(
+                 
+                ),
       child:  Card(
                  elevation: 5,
                       child:  Stack(
@@ -18,63 +20,69 @@ class NormalProductWidget extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.all(10.0),
                             child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Hero(
-                                    tag: product.photo1,
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                      child: CachedNetworkImage(
-                                        imageUrl: product.photo1,
-                                        fit: BoxFit.cover,
+                                  const SizedBox(height: 5,),
+                                  Expanded(
+                                    flex: 1,
+                                    child: Hero(
+                                      tag: product.photo1,
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(20.0),
+                                        child: CachedNetworkImage(
+                                          imageUrl: product.photo1,
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
                                     ),
                                   ),
                                   SizedBox(
                                     height: 5,
                                   ),
-                                   Align(
-                                      alignment: Alignment.bottomLeft,
-                                      child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Padding(
-                                                padding: const EdgeInsets.all(5),
-                                                child: Text(
-                                                  product.name,
-                                                  maxLines: 1,
-                                                  overflow: TextOverflow.ellipsis,
-                                                  style: TextStyle(
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.bold,
+                                   Expanded(
+                                     child: Align(
+                                        alignment: Alignment.bottomLeft,
+                                        child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Padding(
+                                                  padding: const EdgeInsets.all(5),
+                                                  child: Text(
+                                                    product.name,
+                                                    maxLines: 1,
+                                                    overflow: TextOverflow.ellipsis,
+                                                    style: TextStyle(
+                                                      fontSize: 14,
+                                                      fontWeight: FontWeight.bold,
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                  left: 5,
-                                                  right: 5,
-                                                  bottom: 10,
-                                                  top: 2,
-                                                ),
-                                                child: Text(
-                                                   "${product.price} Kyats",
-                                                  style: TextStyle(
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.black,
+                                                Padding(
+                                                  padding: const EdgeInsets.only(
+                                                    left: 5,
+                                                    right: 5,
+                                                    bottom: 10,
+                                                    top: 2,
+                                                  ),
+                                                  child: Text(
+                                                     "${product.price} Kyats",
+                                                    style: TextStyle(
+                                                      fontSize: 14,
+                                                      fontWeight: FontWeight.bold,
+                                                      color: Colors.black,
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                            ],
+                                              ],
+                                            
+                                                                  ),
                                           
-                                                                ),
-                                        
-                                  ),
+                                                                     ),
+                                   ),
                                 ],
                               ),
                           ),
-                          //Status
+                          //Tags
                           Align(
                             alignment: Alignment.topLeft,
                             child: ConstrainedBox(
