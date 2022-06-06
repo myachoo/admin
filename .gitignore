@@ -30,7 +30,8 @@
 .pub-cache/
 .pub/
 /build/
-
+lib/model/*g.dart
+lib/model/*freezed.dart
 # Web related
 lib/generated_plugin_registrant.dart
 lib/data/fcm_key.dart
