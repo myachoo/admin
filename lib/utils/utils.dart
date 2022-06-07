@@ -22,3 +22,9 @@ const appBarTitleStyle = TextStyle(
             wordSpacing: 2,
             letterSpacing: 2,
           );
+
+enum SortPrice{
+  lowToHigh,
+  highToLow,
+  none,
+}

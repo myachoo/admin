@@ -6,9 +6,6 @@ import 'package:get/get.dart';
 import 'package:flutter/src/foundation/annotations.dart' hide Category;
 import 'package:kozarni_ecome/model/advertisement.dart';
 import 'package:kozarni_ecome/model/category.dart' as Cate;
-import 'package:get/get_navigation/src/extension_navigation.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
-import 'package:get/state_manager.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:kozarni_ecome/data/constant.dart';
 import 'package:kozarni_ecome/data/enum.dart';
@@ -16,7 +13,6 @@ import 'package:kozarni_ecome/model/hive_item.dart';
 import 'package:kozarni_ecome/model/item.dart';
 import 'package:kozarni_ecome/model/product.dart';
 import 'package:kozarni_ecome/model/purchase.dart';
-import 'package:kozarni_ecome/model/division.dart';
 import 'package:kozarni_ecome/model/tag.dart';
 import 'package:kozarni_ecome/model/user.dart';
 import 'package:kozarni_ecome/model/view_all_model.dart';
@@ -27,6 +23,7 @@ import 'package:kozarni_ecome/widgets/show_loading/show_loading.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/status.dart';
+import '../utils/utils.dart';
 
 class HomeController extends GetxController {
   final Auth _auth = Auth();
@@ -34,13 +31,48 @@ class HomeController extends GetxController {
   final Api _api = Api();
   final ImagePicker _imagePicker = ImagePicker();
   Rxn<AuthUser?> currentUser = Rxn<AuthUser?>(null);
-
+///////////////////////////For View All Screen////////////////////////////////
   ViewAllModel viewAllModel = ViewAllModel.empty();
+  RxList<Product> viewAllResultProducts = <Product>[].obs;
+  List<String> viewAllCategories = [];
+  RxBool isRefresh = true.obs;
+  var sortPrice = SortPrice.none.obs;
 
-  void setViewAllProducts(ViewAllModel value){
-    viewAllModel = value;
+  void soltingPriceList(SortPrice value){
+    sortPrice.value = value;
+    viewAllResultProducts.value = viewAllModel.products;
+    switch (value) {
+      case SortPrice.lowToHigh:
+        viewAllResultProducts.sort((a,b) => a.price.compareTo(b.price));
+        break;
+      case SortPrice.highToLow:
+        viewAllResultProducts.sort((a,b) => a.price.compareTo(b.price));
+        viewAllResultProducts.value = viewAllResultProducts.reversed.toList();
+        break;
+      default:
+    }
   }
 
+  void refreshViewAll() {
+    sortPrice.value = SortPrice.none;
+    isRefresh.value = true;
+    category.value = "";
+    viewAllResultProducts.value = viewAllModel.products;
+  }
+
+  void changeAllViewCategory(String value){
+    isRefresh.value = false;
+    category.value = value;
+    viewAllResultProducts.value = viewAllModel.products.where((element) => element.category == value).toList();
+  }
+
+  void setViewAllProducts(ViewAllModel value){
+    isRefresh.value = false;
+    viewAllModel = value;
+    viewAllResultProducts.value = value.products;
+    viewAllCategories = value.products.map((e) => e.category).toSet().toList();
+  }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
   final RxBool authorized = false.obs;
   final Rx<AuthUser> user = AuthUser().obs;
 
