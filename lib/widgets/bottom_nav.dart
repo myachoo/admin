@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:kozarni_ecome/controller/home_controller.dart';
-import 'package:kozarni_ecome/data/constant.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class BottomNav extends StatelessWidget {
   const BottomNav({Key? key}) : super(key: key);
@@ -55,13 +53,12 @@ class BottomNav extends StatelessWidget {
                 children: [
                   IconButton(
                     onPressed: () {
-                      controller.changeNav(1);
+                     controller.changeNav(1);
                     },
                     icon: FaIcon(
                       FontAwesomeIcons.shoppingBag,
-                      color: controller.navIndex.value == 1
-                          ? Colors.black
-                          : Colors.grey,
+                      color: 
+                           Colors.grey,
                     ),
                   ),
                   Text("Shop"),
@@ -144,11 +141,11 @@ class BottomNav extends StatelessWidget {
                 children: [
                   IconButton(
                     onPressed: () {
-                      controller.changeNav(4);
+                      controller.changeNav(3);
                     },
                     icon: FaIcon(
                       FontAwesomeIcons.user,
-                      color: controller.navIndex.value == 4
+                      color: controller.navIndex.value == 3
                           ? Colors.black
                           : Colors.grey,
                     ),

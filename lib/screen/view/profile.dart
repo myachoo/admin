@@ -11,7 +11,7 @@ class ProfileView extends StatelessWidget {
   Widget build(BuildContext context) {
     final HomeController controller = Get.find();
     return Obx(
-      () => controller.authorized.value
+      () => !(controller.currentUser.value == null)
           ? _LoginUser()
           : ListView(
               children: [
@@ -25,7 +25,7 @@ class ProfileView extends StatelessWidget {
                     controller: controller.phoneState.value
                         ? controller.verificationController
                         : controller.phoneController,
-                    keyboardType: TextInputType.phone,
+                    keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       hintText: controller.phoneState.value
@@ -89,7 +89,19 @@ class _LoginUser extends StatelessWidget {
                   // ),
                   Obx(
                     () => Text(
-                      _controller.user.value.user?.phoneNumber ?? '',
+                      _controller.currentUser.value?.emailAddress ?? '',//-Email Address Will be Phone Number beacause
+                      //--I didn't change it,TODO: need to change emailAddress to phone number
+                      //--instance variable of AuthUser Object
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  //-----Point For Admin To Test On Their Own----//
+                  Obx(
+                    () => Text(
+                      "Your points: ${_controller.currentUser.value?.points ?? 0}",
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -146,8 +158,7 @@ class _AdminPanel extends StatelessWidget {
         ),
         GestureDetector(
           onTap: () {
-            controller.changeOwnBrandOrNot(false,
-                false); //Make Sure Default Brand Options is Export Brand.
+            controller.changeCat("");
             Get.toNamed(uploadItemScreen);
           },
           child: Container(
@@ -187,6 +198,102 @@ class _AdminPanel extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text("Manage Item"),
+                    Icon(Icons.edit),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+        GestureDetector(
+          onTap: () {
+            Get.toNamed(advertisementUrl);
+          },
+          child: Container(
+            height: 60,
+            margin: EdgeInsets.only(
+              left: 20,
+              right: 20,
+            ),
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 20, right: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("Manage Advertisement"),
+                    Icon(Icons.edit),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+        GestureDetector(
+          onTap: () {
+            Get.toNamed(categoriesUrl);
+          },
+          child: Container(
+            height: 60,
+            margin: EdgeInsets.only(
+              left: 20,
+              right: 20,
+            ),
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 20, right: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("Manage Categories"),
+                    Icon(Icons.edit),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+        GestureDetector(
+          onTap: () {
+            Get.toNamed(statusUrl);
+          },
+          child: Container(
+            height: 60,
+            margin: EdgeInsets.only(
+              left: 20,
+              right: 20,
+            ),
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 20, right: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("Manage Status"),
+                    Icon(Icons.edit),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+        GestureDetector(
+          onTap: () {
+            Get.toNamed(tagsUrl);
+          },
+          child: Container(
+            height: 60,
+            margin: EdgeInsets.only(
+              left: 20,
+              right: 20,
+            ),
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 20, right: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("Manage Tags"),
                     Icon(Icons.edit),
                   ],
                 ),

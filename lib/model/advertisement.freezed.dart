@@ -22,6 +22,8 @@ Advertisement _$AdvertisementFromJson(Map<String, dynamic> json) {
 mixin _$Advertisement {
   String get id => throw _privateConstructorUsedError;
   String get image => throw _privateConstructorUsedError;
+  String get description => throw _privateConstructorUsedError;
+  Map<String, String> get products => throw _privateConstructorUsedError;
   DateTime get dateTime => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -35,7 +37,12 @@ abstract class $AdvertisementCopyWith<$Res> {
   factory $AdvertisementCopyWith(
           Advertisement value, $Res Function(Advertisement) then) =
       _$AdvertisementCopyWithImpl<$Res>;
-  $Res call({String id, String image, DateTime dateTime});
+  $Res call(
+      {String id,
+      String image,
+      String description,
+      Map<String, String> products,
+      DateTime dateTime});
 }
 
 /// @nodoc
@@ -51,6 +58,8 @@ class _$AdvertisementCopyWithImpl<$Res>
   $Res call({
     Object? id = freezed,
     Object? image = freezed,
+    Object? description = freezed,
+    Object? products = freezed,
     Object? dateTime = freezed,
   }) {
     return _then(_value.copyWith(
@@ -62,6 +71,14 @@ class _$AdvertisementCopyWithImpl<$Res>
           ? _value.image
           : image // ignore: cast_nullable_to_non_nullable
               as String,
+      description: description == freezed
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String,
+      products: products == freezed
+          ? _value.products
+          : products // ignore: cast_nullable_to_non_nullable
+              as Map<String, String>,
       dateTime: dateTime == freezed
           ? _value.dateTime
           : dateTime // ignore: cast_nullable_to_non_nullable
@@ -77,7 +94,12 @@ abstract class _$$_AdvertisementCopyWith<$Res>
           _$_Advertisement value, $Res Function(_$_Advertisement) then) =
       __$$_AdvertisementCopyWithImpl<$Res>;
   @override
-  $Res call({String id, String image, DateTime dateTime});
+  $Res call(
+      {String id,
+      String image,
+      String description,
+      Map<String, String> products,
+      DateTime dateTime});
 }
 
 /// @nodoc
@@ -95,6 +117,8 @@ class __$$_AdvertisementCopyWithImpl<$Res>
   $Res call({
     Object? id = freezed,
     Object? image = freezed,
+    Object? description = freezed,
+    Object? products = freezed,
     Object? dateTime = freezed,
   }) {
     return _then(_$_Advertisement(
@@ -106,6 +130,14 @@ class __$$_AdvertisementCopyWithImpl<$Res>
           ? _value.image
           : image // ignore: cast_nullable_to_non_nullable
               as String,
+      description: description == freezed
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String,
+      products: products == freezed
+          ? _value._products
+          : products // ignore: cast_nullable_to_non_nullable
+              as Map<String, String>,
       dateTime: dateTime == freezed
           ? _value.dateTime
           : dateTime // ignore: cast_nullable_to_non_nullable
@@ -118,7 +150,12 @@ class __$$_AdvertisementCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_Advertisement implements _Advertisement {
   _$_Advertisement(
-      {required this.id, required this.image, required this.dateTime});
+      {required this.id,
+      required this.image,
+      required this.description,
+      required final Map<String, String> products,
+      required this.dateTime})
+      : _products = products;
 
   factory _$_Advertisement.fromJson(Map<String, dynamic> json) =>
       _$$_AdvertisementFromJson(json);
@@ -128,11 +165,20 @@ class _$_Advertisement implements _Advertisement {
   @override
   final String image;
   @override
+  final String description;
+  final Map<String, String> _products;
+  @override
+  Map<String, String> get products {
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_products);
+  }
+
+  @override
   final DateTime dateTime;
 
   @override
   String toString() {
-    return 'Advertisement(id: $id, image: $image, dateTime: $dateTime)';
+    return 'Advertisement(id: $id, image: $image, description: $description, products: $products, dateTime: $dateTime)';
   }
 
   @override
@@ -142,6 +188,9 @@ class _$_Advertisement implements _Advertisement {
             other is _$_Advertisement &&
             const DeepCollectionEquality().equals(other.id, id) &&
             const DeepCollectionEquality().equals(other.image, image) &&
+            const DeepCollectionEquality()
+                .equals(other.description, description) &&
+            const DeepCollectionEquality().equals(other._products, _products) &&
             const DeepCollectionEquality().equals(other.dateTime, dateTime));
   }
 
@@ -151,6 +200,8 @@ class _$_Advertisement implements _Advertisement {
       runtimeType,
       const DeepCollectionEquality().hash(id),
       const DeepCollectionEquality().hash(image),
+      const DeepCollectionEquality().hash(description),
+      const DeepCollectionEquality().hash(_products),
       const DeepCollectionEquality().hash(dateTime));
 
   @JsonKey(ignore: true)
@@ -168,6 +219,8 @@ abstract class _Advertisement implements Advertisement {
   factory _Advertisement(
       {required final String id,
       required final String image,
+      required final String description,
+      required final Map<String, String> products,
       required final DateTime dateTime}) = _$_Advertisement;
 
   factory _Advertisement.fromJson(Map<String, dynamic> json) =
@@ -177,6 +230,10 @@ abstract class _Advertisement implements Advertisement {
   String get id => throw _privateConstructorUsedError;
   @override
   String get image => throw _privateConstructorUsedError;
+  @override
+  String get description => throw _privateConstructorUsedError;
+  @override
+  Map<String, String> get products => throw _privateConstructorUsedError;
   @override
   DateTime get dateTime => throw _privateConstructorUsedError;
   @override

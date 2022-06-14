@@ -1,4 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+import '../controller/home_controller.dart';
+import '../model/view_all_model.dart';
+import '../routes/routes.dart';
 
 // ignore: camel_case_types
 class Shop extends StatefulWidget {
@@ -31,52 +37,8 @@ class _ShopState extends State<Shop>
         ),
         centerTitle: true,
         shadowColor: Colors.transparent,
-        // leading: Padding(
-        //   padding: const EdgeInsets.only(left:15.0),
-        //   child: IconButton(
-        //     icon: Icon(
-        //       Icons.arrow_back,
-        //       color: colorstheme,
-        //       size: 30,
-        //     ),
-        //     onPressed: () {},
-        //   ),
-        // ),
       ),
-      body: Column(
-        children: [
-          // Container(
-          //   decoration: BoxDecoration(
-          //       borderRadius: BorderRadius.circular(20),
-          //       color: Colors.grey[300]),
-          //   child: TabBar(
-          //       isScrollable: true,
-          //       indicatorPadding: EdgeInsets.all(10),
-          //       labelColor: Colors.white,
-          //       unselectedLabelColor: colorstheme,
-          //       labelStyle: TextStyle(fontSize: 20),
-          //       labelPadding:
-          //       EdgeInsets.only(left: 35, right: 35, top: 10, bottom: 10),
-          //       indicator: BoxDecoration(
-          //           color: colorstheme,
-          //           borderRadius: BorderRadius.circular(20)),
-          //       controller: _tabController,
-          //       tabs: [
-          //         Text('Day'),
-          //         Text('Week'),
-          //         Text('Month'),
-          //       ]),
-          // ),
-          Expanded(
-            child: TabBarView(
-                controller: _tabController, children: [
-              CardWidget(),
-              CardWidget(),
-              CardWidget(),
-            ]),
-          )
-        ],
-      ),
+      body: CardWidget(),
     );
   }
 }
@@ -102,52 +64,66 @@ class CardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final HomeController _controller = Get.find();
     return Padding(
       padding: const EdgeInsets.only(top: 18.0),
       child: GridView.builder(
-        itemCount: data.length,
+        itemCount: _controller.categories.length,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           // crossAxisSpacing: 10
         ),
         itemBuilder: (context, index) {
-          return Padding(
-            padding: const EdgeInsets.all(4.0),
-            child: Card(
-              elevation: 10,
-              color: Colors.white,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20)),
-              child: Padding(
-                padding: const EdgeInsets.all(0.0),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 20, top: 20),
-                          child: Text(
-                            'New',
-                            style: TextStyle(color: Colors.black, fontSize: 20),
+          final cate = _controller.categories[index];
+          return InkWell(
+            onTap: (){
+              _controller.setViewAllProducts(
+                                                    ViewAllModel(
+                                                      status: "${cate.name} Products", 
+                                                      products: _controller.items.where((e) => e.category == cate.name).toList(),
+                                                    )
+                                                  );
+                                                  Get.toNamed(viewAllUrl);
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: Card(
+                elevation: 10,
+                color: Colors.white,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20)),
+                child: Padding(
+                  padding: const EdgeInsets.all(0.0),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20, top: 20),
+                            child: Text(
+                              cate.name,
+                              style: TextStyle(color: Colors.black, fontSize: 20),
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                    Container(
-                        alignment: Alignment.bottomRight,
-                        padding: EdgeInsets.only(right:10),
-                        child: Column(
-                          children: [
-                          Image.asset(
-                          'assets/Make-up.png',
-                          width: 90,
-                          height: 100,
-                          fit: BoxFit.cover,
-                        ),
-                          ],
-                        ))
-                  ],
+                        ],
+                      ),
+                      Container(
+                          alignment: Alignment.bottomRight,
+                          padding: EdgeInsets.only(right:10),
+                          child: Column(
+                            children: [
+                            cate.image!.isNotEmpty ? 
+                            CachedNetworkImage(
+                            imageUrl: cate.image!,
+                            width: 90,
+                            height: 100,
+                            fit: BoxFit.cover,
+                          ) : const SizedBox(),
+                            ],
+                          ))
+                    ],
+                  ),
                 ),
               ),
             ),

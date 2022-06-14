@@ -9,6 +9,7 @@ import 'package:kozarni_ecome/data/constant.dart';
 import 'package:get/get.dart';
 import 'package:kozarni_ecome/expaned_widget.dart';
 import 'package:kozarni_ecome/model/hive_item.dart';
+import 'package:kozarni_ecome/routes/routes.dart';
 import 'home_screen.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
@@ -18,7 +19,7 @@ class DetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final HomeController controller = Get.find();
-
+    final currentProduct = controller.editItem.value;
     return Scaffold(
       backgroundColor: detailTextBackgroundColor,
       appBar: AppBar(
@@ -26,7 +27,7 @@ class DetailScreen extends StatelessWidget {
         elevation: 0,
         backgroundColor: Colors.white,
         title: Text(
-          controller.selectedItem.value.name,
+          currentProduct!.name,
           style: TextStyle(
               color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16),
         ),
@@ -40,24 +41,24 @@ class DetailScreen extends StatelessWidget {
                 bottomRight: Radius.circular(30),
               ),
               child: Hero(
-                tag: controller.selectedItem.value.photo,
+                tag: currentProduct.photo1,
                 child: CarouselSlider(
                   items: [
                     CachedNetworkImage(
-                      imageUrl: controller.selectedItem.value.photo,
-                      // "$baseUrl$itemUrl${controller.selectedItem.value.photo}/get",
+                      imageUrl: currentProduct.photo1,
+                      // "$baseUrl$itemUrl${currentProduct.photo}/get",
                       height: double.infinity,
                       fit: BoxFit.cover,
                     ),
                     CachedNetworkImage(
-                      imageUrl: controller.selectedItem.value.photo2,
-                      // "$baseUrl$itemUrl${controller.selectedItem.value.photo}/get",
+                      imageUrl: currentProduct.photo2,
+                      // "$baseUrl$itemUrl${currentProduct.photo}/get",
                       height: double.infinity,
                       fit: BoxFit.cover,
                     ),
                     CachedNetworkImage(
-                      imageUrl: controller.selectedItem.value.photo3,
-                      // "$baseUrl$itemUrl${controller.selectedItem.value.photo}/get",
+                      imageUrl: currentProduct.photo3,
+                      // "$baseUrl$itemUrl${currentProduct.photo}/get",
                       height: double.infinity,
                       fit: BoxFit.cover,
                     ),
@@ -110,7 +111,7 @@ class DetailScreen extends StatelessWidget {
                           (index) => Icon(
                             Icons.star,
                             size: 20,
-                            color: index <= controller.selectedItem.value.star
+                            color: index <= (currentProduct.love ?? 0)
                                 ? homeIndicatorColor
                                 : Colors.grey,
                           ),
@@ -122,7 +123,7 @@ class DetailScreen extends StatelessWidget {
                             Hive.box<HiveItem>(boxName).listenable(),
                         builder: (context, Box<HiveItem> box, widget) {
                           final currentObj =
-                              box.get(controller.selectedItem.value.id);
+                              box.get(currentProduct.id);
 
                           if (!(currentObj == null)) {
                             return IconButton(
@@ -138,9 +139,9 @@ class DetailScreen extends StatelessWidget {
                           return IconButton(
                               onPressed: () {
                                 box.put(
-                                    controller.selectedItem.value.id,
+                                    currentProduct.id,
                                     controller.changeHiveItem(
-                                        controller.selectedItem.value));
+                                        currentProduct));
                               },
                               icon: Icon(
                                 Icons.favorite_outline,
@@ -164,7 +165,7 @@ class DetailScreen extends StatelessWidget {
                           fontSize: 16),
                     ),
                     Text(
-                      "${controller.selectedItem.value.price} Kyats",
+                      "${currentProduct.price} Kyats",
                       style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
@@ -179,14 +180,14 @@ class DetailScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      controller.selectedItem.value.brand,
+                      "Brand",
                       style: TextStyle(
                           color: Colors.red,
                           fontWeight: FontWeight.bold,
                           fontSize: 16),
                     ),
                     Text(
-                      controller.selectedItem.value.deliverytime,
+                      "Delevery Time",
                       style: TextStyle(
                           decoration: TextDecoration.lineThrough,
                           color: Colors.red,
@@ -194,7 +195,8 @@ class DetailScreen extends StatelessWidget {
                           fontSize: 16),
                     ),
                     Text(
-                      "${controller.selectedItem.value.discountprice} Kyats",
+                      (currentProduct.discountPrice ?? 0) > 0 ?
+                      "${currentProduct.discountPrice} Kyats" : "no discount price",
                       style: TextStyle(
                           color: Colors.red,
                           fontWeight: FontWeight.bold,
@@ -206,86 +208,89 @@ class DetailScreen extends StatelessWidget {
                   height: 10,
                 ),
                 ExpandedWidget(
-                  text: controller.selectedItem.value.desc,
+                  text: currentProduct.description,
                 ),
                 SizedBox(
                   height: 30,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      children: [
-                        Text(
-                          "⏰ Delivery Time",
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey,
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        children: [
+                          Text(
+                            "⏰ Delivery Time",
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey,
+                            ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          "Within 3 Days",
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
+                          SizedBox(
+                            height: 5,
                           ),
-                        )
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Text(
-                          "💁 Availability ",
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey,
+                          Text(
+                            "Within 3 Days",
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          )
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Text(
+                            "💁 Availability ",
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey,
+                            ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          "In Stock",
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
+                          SizedBox(
+                            height: 5,
                           ),
-                        )
-                      ],
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          "📞 Contact Phone ",
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey,
+                          Text(
+                            "In Stock",
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          )
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            "📞 Contact Phone ",
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey,
+                            ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          "     09 7777 0 222 8",
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
+                          SizedBox(
+                            height: 5,
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                          Text(
+                            "     09 7777 0 222 8",
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
                 SizedBox(height: 30),
                 Row(
@@ -296,7 +301,7 @@ class DetailScreen extends StatelessWidget {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(20),
                         child: CachedNetworkImage(
-                          imageUrl: controller.selectedItem.value.photo2,
+                          imageUrl: currentProduct.photo2,
                           width: 150,
                           height: 200,
                           fit: BoxFit.cover,
@@ -315,7 +320,7 @@ class DetailScreen extends StatelessWidget {
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(20),
                               child: CachedNetworkImage(
-                                imageUrl: controller.selectedItem.value.photo3,
+                                imageUrl: currentProduct.photo3,
                                 width: 150,
                                 height: 200,
                                 fit: BoxFit.cover,
@@ -397,22 +402,19 @@ class DetailScreen extends StatelessWidget {
         child: ElevatedButton(
           style: buttonStyle,
           onPressed: () {
-            Get.defaultDialog(
+            if((currentProduct.color == null) && (currentProduct.size == null)){
+              //------Add to Cart-------//
+              controller.addToCart(currentProduct);
+                Get.back();
+            }else{
+              Get.defaultDialog(
               titlePadding: EdgeInsets.all(0),
               contentPadding: EdgeInsets.only(left: 20, right: 20, bottom: 10),
               radius: 0,
               title: '',
-              content: AddToCart(
-                priceList: [
-                  controller.selectedItem.value.price,
-                  controller.selectedItem.value.discountprice,
-                ],
-                priceString: [
-                  "၁ ထည် လက်လီ ဈေးနှုန်",
-                  controller.selectedItem.value.brand,
-                ],
-              ),
+              content: AddToCart(),
             );
+            }
           },
           child: Text("၀ယ်ယူရန်"),
         ),
@@ -422,12 +424,8 @@ class DetailScreen extends StatelessWidget {
 }
 
 class AddToCart extends StatefulWidget {
-  final List<int> priceList;
-  final List<String> priceString;
   const AddToCart({
     Key? key,
-    required this.priceList,
-    required this.priceString,
   }) : super(key: key);
 
   @override
@@ -437,14 +435,14 @@ class AddToCart extends StatefulWidget {
 class _AddToCartState extends State<AddToCart> {
   String? colorValue;
   String? sizeValue;
-  String? priceType;
   final HomeController controller = Get.find();
   @override
   Widget build(BuildContext context) {
     final HomeController controller = Get.find();
+    final currentProduct = controller.editItem.value;
     return Column(
       children: [
-        DropdownButtonFormField(
+        !(currentProduct?.color == null ) ?DropdownButtonFormField(
           value: colorValue,
           hint: Text(
             'Color',
@@ -453,7 +451,7 @@ class _AddToCartState extends State<AddToCart> {
           onChanged: (String? e) {
             colorValue = e;
           },
-          items: controller.selectedItem.value.color
+          items: currentProduct!.color!
               .split(',')
               .map((e) => DropdownMenuItem(
                     value: e,
@@ -463,11 +461,11 @@ class _AddToCartState extends State<AddToCart> {
                     ),
                   ))
               .toList(),
-        ),
+        ) : const SizedBox(),
         SizedBox(
           height: 10,
         ),
-        DropdownButtonFormField(
+        !(currentProduct?.size == null) ? DropdownButtonFormField(
           value: sizeValue,
           hint: Text(
             "Size",
@@ -476,8 +474,8 @@ class _AddToCartState extends State<AddToCart> {
           onChanged: (String? e) {
             sizeValue = e;
           },
-          items: controller.selectedItem.value.size
-              .split(',')
+          items: currentProduct?.size
+              !.split(',')
               .map((e) => DropdownMenuItem(
                     value: e,
                     child: Text(
@@ -486,48 +484,22 @@ class _AddToCartState extends State<AddToCart> {
                     ),
                   ))
               .toList(),
-        ),
+        ) : const SizedBox(),
         //Price Wholesale (or) Retail
         SizedBox(
           height: 10,
         ),
-        DropdownButtonFormField(
-          value: priceType,
-          hint: Text(
-            "Price",
-            style: TextStyle(fontSize: 12),
-          ),
-          onChanged: (String? e) {
-            priceType = e;
-          },
-          items: List.generate(
-            widget.priceString.length,
-            (index) => DropdownMenuItem(
-              value: widget.priceString[index],
-              child: Text(
-                widget.priceString[index],
-                style: TextStyle(fontSize: 12),
-              ),
-            ),
-          ),
-        ),
-        SizedBox(
-          height: 10,
-        ),
+        
         Padding(
           padding: const EdgeInsets.only(top: 30),
           child: ElevatedButton(
             style: buttonStyle,
             onPressed: () {
-              if (colorValue != null &&
-                  sizeValue != null &&
-                  priceType != null) {
-                int price = (priceType == widget.priceString[0])
-                    ? widget.priceList[0]
-                    : widget.priceList[1];
-                controller.addToCart(controller.selectedItem.value, colorValue!,
-                    sizeValue!, price, priceType!);
-                Get.to(HomeScreen());
+              if (colorValue != null || 
+                  sizeValue != null) {
+                 controller.addToCart(currentProduct!,color: colorValue,size:sizeValue);
+               Get.back();
+               Get.back();
               }
             },
             child: Text("၀ယ်ယူရန်"),

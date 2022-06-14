@@ -22,44 +22,51 @@ class HomeCategory extends StatelessWidget {
       height: 40,
 
       // color: Colors.green,
-      child:  ListView.builder(
-                padding: EdgeInsets.only(left: 20),
-                scrollDirection: Axis.horizontal,
-                itemCount: categories.length,
-                itemBuilder: (_, i) => Container(
-                  margin: EdgeInsets.only(
-                    top: 3,
-                    bottom: 3,
-                    right: 20,
-                  ),
-                  child: Obx(
-                    () => ElevatedButton(
-                    
-                      style: ButtonStyle(
-                        backgroundColor: controller.category.value ==
-                                categories[i]
-                            ? MaterialStateProperty.all(homeIndicatorColor)
-                            : MaterialStateProperty.all(Colors.white),
-                        foregroundColor: controller.category.value ==
-                                categories[i]
-                            ? MaterialStateProperty.all(Colors.white)
-                            : MaterialStateProperty.all(Colors.black),
-                        shape: MaterialStateProperty.all(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5),
+      child:  Obx(
+        () {
+          return controller.categories.length > 0 ? ListView.builder(
+                    padding: EdgeInsets.only(left: 20),
+                    scrollDirection: Axis.horizontal,
+                    itemCount: controller.categories.length,
+                    itemBuilder: (_, i) {
+                      final cate = controller.categories[i];
+                      return Container(
+                      margin: EdgeInsets.only(
+                        top: 3,
+                        bottom: 3,
+                        right: 20,
+                      ),
+                      child: Obx(
+                        () => ElevatedButton(
+                        
+                          style: ButtonStyle(
+                            backgroundColor: controller.category.value ==
+                                    cate.name
+                                ? MaterialStateProperty.all(homeIndicatorColor)
+                                : MaterialStateProperty.all(Colors.white),
+                            foregroundColor: controller.category.value ==
+                                    cate.name
+                                ? MaterialStateProperty.all(Colors.white)
+                                : MaterialStateProperty.all(Colors.black),
+                            shape: MaterialStateProperty.all(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                            ),
+                          ),
+                          onPressed: () {
+                            controller.changeCat(cate.name);
+                          },
+                          child: Text(
+                            cate.name,
+                            style: TextStyle(color:controller.category.value ==
+                                    cate.name ? Colors.white: Colors.black,),
                           ),
                         ),
                       ),
-                      onPressed: () {
-                        controller.changeCat(categories[i]);
-                      },
-                      child: Text(
-                        categories[i],
-                        style: TextStyle(color: Colors.black,),
-                      ),
-                    ),
-                  ),
-                ),
+                    );}
+          ) : const SizedBox();
+        }
       )
     );
   }
