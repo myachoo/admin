@@ -148,11 +148,11 @@ class SearchScreen extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Hero(
-                                  tag: controller.searchitems[i].photo,
+                                  tag: controller.searchitems[i].photo1,
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(20.0),
                                     child: CachedNetworkImage(
-                                      imageUrl: controller.searchitems[i].photo,
+                                      imageUrl: controller.searchitems[i].photo1,
                                       fit: BoxFit.cover,
                                     ),
                                   ),

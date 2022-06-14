@@ -60,7 +60,7 @@ class HotView extends StatelessWidget {
                           (index) => Icon(
                             Icons.star,
                             size: 16,
-                            color: index <= controller.getItems()[i].star
+                            color: index <= (controller.getItems()[i].love ?? 0)
                                 ? homeIndicatorColor
                                 : Colors.grey,
                           ),
@@ -75,7 +75,7 @@ class HotView extends StatelessWidget {
                     bottomRight: Radius.circular(6),
                   ),
                   child: CachedNetworkImage(
-                    imageUrl: controller.hot()[i].photo,
+                    imageUrl: controller.hot()[i].photo1,
                     // "$baseUrl$itemUrl${controller.hot()[i].photo}/get",
                     width: 100,
                     height: 100,

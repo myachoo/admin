@@ -8,7 +8,7 @@ part of 'hive_item.dart';
 
 class HiveItemAdapter extends TypeAdapter<HiveItem> {
   @override
-  final int typeId = 1;
+  final int typeId = 3;
 
   @override
   HiveItem read(BinaryReader reader) {
@@ -18,57 +18,69 @@ class HiveItemAdapter extends TypeAdapter<HiveItem> {
     };
     return HiveItem(
       id: fields[0] as String,
-      photo: fields[1] as String,
+      name: fields[4] as String,
+      photo1: fields[1] as String,
       photo2: fields[2] as String,
       photo3: fields[3] as String,
-      name: fields[5] as String,
-      brand: fields[6] as String,
-      deliverytime: fields[7] as String,
-      price: fields[8] as int,
-      discountprice: fields[9] as int,
-      desc: fields[4] as String,
-      color: fields[10] as String,
-      size: fields[11] as String,
-      star: fields[12] as int,
+      description: fields[5] as String,
+      price: fields[6] as int,
+      discountPrice: fields[7] as int,
+      size: fields[8] as String?,
+      color: fields[9] as String?,
+      requirePoint: fields[10] as int,
+      advertisementID: fields[11] as String?,
       category: fields[13] as String,
-      isOwnBrand: fields[14] as bool,
+      status: fields[12] as String,
+      tags: (fields[14] as List).cast<String>(),
+      comment: (fields[18] as List).cast<String>(),
+      dateTime: fields[15] as DateTime,
+      deliveryTime: fields[16] as String?,
+      love: fields[17] as int,
     );
   }
 
   @override
   void write(BinaryWriter writer, HiveItem obj) {
     writer
-      ..writeByte(15)
+      ..writeByte(19)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.photo)
+      ..write(obj.photo1)
       ..writeByte(2)
       ..write(obj.photo2)
       ..writeByte(3)
       ..write(obj.photo3)
       ..writeByte(4)
-      ..write(obj.desc)
-      ..writeByte(5)
       ..write(obj.name)
+      ..writeByte(5)
+      ..write(obj.description)
       ..writeByte(6)
-      ..write(obj.brand)
-      ..writeByte(7)
-      ..write(obj.deliverytime)
-      ..writeByte(8)
       ..write(obj.price)
-      ..writeByte(9)
-      ..write(obj.discountprice)
-      ..writeByte(10)
-      ..write(obj.color)
-      ..writeByte(11)
+      ..writeByte(7)
+      ..write(obj.discountPrice)
+      ..writeByte(8)
       ..write(obj.size)
+      ..writeByte(9)
+      ..write(obj.color)
+      ..writeByte(10)
+      ..write(obj.requirePoint)
+      ..writeByte(11)
+      ..write(obj.advertisementID)
       ..writeByte(12)
-      ..write(obj.star)
+      ..write(obj.status)
       ..writeByte(13)
       ..write(obj.category)
       ..writeByte(14)
-      ..write(obj.isOwnBrand);
+      ..write(obj.tags)
+      ..writeByte(15)
+      ..write(obj.dateTime)
+      ..writeByte(16)
+      ..write(obj.deliveryTime)
+      ..writeByte(17)
+      ..write(obj.love)
+      ..writeByte(18)
+      ..write(obj.comment);
   }
 
   @override

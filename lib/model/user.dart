@@ -1,20 +1,26 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:json_annotation/json_annotation.dart';
 
+part 'user.g.dart';
+
+@JsonSerializable()
 class AuthUser {
-  final User? user;
-  final bool isAdmin;
-  final String? profileImage;
+  final String id;
+  final String emailAddress;
+  final String userName;
+  final String image;
+  final int points;
+  final int? status;
+  AuthUser({
+    required this.id,
+    required this.emailAddress,
+    required this.userName,
+    required this.image,
+    required this.points,
+    this.status = 0,
+  });
 
-  AuthUser({this.user, this.isAdmin = false, this.profileImage});
+  factory AuthUser.fromJson(Map<String, dynamic> json) =>
+      _$AuthUserFromJson(json);
 
-  AuthUser update({
-    User? newUser,
-    bool? newIsAdmin,
-    String? newProfileImage,
-  }) =>
-      AuthUser(
-        user: newUser ?? user,
-        isAdmin: newIsAdmin ?? isAdmin,
-        profileImage: newProfileImage ?? profileImage,
-      );
+  Map<String, dynamic> toJson() => _$AuthUserToJson(this);
 }

@@ -30,10 +30,16 @@
 .pub-cache/
 .pub/
 /build/
+/build/fef79700bb299ff80795c77fabc500e6
+/build/flutter_assets
+/build/c075001b96339384a97db4862b8ab8db.cache.dill.track.dill
+
+#Auto Generated
+lib/model/*g.dart
+lib/model/*freezed.dart
 
 # Web related
 lib/generated_plugin_registrant.dart
-lib/data/fcm_key.dart
 
 # Symbolication related
 app.*.symbols

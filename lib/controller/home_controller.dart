@@ -1,23 +1,37 @@
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
-import 'package:get/state_manager.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter/src/foundation/annotations.dart' hide Category;
+import 'package:hive/hive.dart';
+import 'package:kozarni_ecome/model/advertisement.dart';
+import 'package:kozarni_ecome/model/category.dart' as Cate;
 import 'package:image_picker/image_picker.dart';
 import 'package:kozarni_ecome/data/constant.dart';
 import 'package:kozarni_ecome/data/enum.dart';
 import 'package:kozarni_ecome/model/hive_item.dart';
-import 'package:kozarni_ecome/model/item.dart';
-import 'package:kozarni_ecome/model/purchase.dart';
-import 'package:kozarni_ecome/model/division.dart';
+import 'package:kozarni_ecome/model/product.dart';
+import 'package:kozarni_ecome/model/tag.dart';
 import 'package:kozarni_ecome/model/user.dart';
+import 'package:kozarni_ecome/model/view_all_model.dart';
 import 'package:kozarni_ecome/service/api.dart';
 import 'package:kozarni_ecome/service/auth.dart';
 import 'package:kozarni_ecome/service/database.dart';
+import 'package:kozarni_ecome/widgets/show_dialog/show_dialog.dart';
+import 'package:kozarni_ecome/widgets/show_loading/show_loading.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
+
+import '../model/hive_purchase.dart';
+import '../model/hive_purchase_item.dart';
+import '../model/purchase_item.dart';
+import '../model/real_purchase.dart';
+import '../model/status.dart';
 
 class HomeController extends GetxController {
   final Auth _auth = Auth();
@@ -25,9 +39,14 @@ class HomeController extends GetxController {
   final Api _api = Api();
   final ImagePicker _imagePicker = ImagePicker();
   Rxn<AuthUser?> currentUser = Rxn<AuthUser?>(null);
-
+///////////////////////////For View All Screen////////////////////////////////
+ViewAllModel viewAllModel = ViewAllModel.empty();
+RxMap<String,dynamic> myCartMap = <String,dynamic>{}.obs;
+void setViewAllProducts(ViewAllModel value){
+    viewAllModel = value;
+  }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
   final RxBool authorized = false.obs;
-  final Rx<AuthUser> user = AuthUser().obs;
 
   final RxBool phoneState = false.obs;
   final codeSentOnWeb = false.obs; //codeSentOnWeb on Web
@@ -46,11 +65,84 @@ class HomeController extends GetxController {
 
   final RxString _codeSentId = ''.obs;
   final RxInt _codeSentToken = 0.obs;
-
+  Box<HivePurchase> purchaseHiveBox =
+      Hive.box(purchaseBox);
   final RxList<PurchaseItem> myCart = <PurchaseItem>[].obs;
 
   bool isOwnBrand = false;
   int mouseIndex = -1; //Mouse Region
+
+ final RxList<Cate.Category> categories = <Cate.Category>[].obs;
+ final RxList<Status> statusList = <Status>[].obs;
+ final RxList<Advertisement> advertisementList = <Advertisement>[].obs;
+ final RxList<Tag> tagsList = <Tag>[].obs;
+
+ List<Product> getAdvertisementsProductList(Map<String,String> productMap){
+   List<Product> resultList = [];
+   for (var item in items) {
+     if(productMap.containsKey(item.id)){
+       resultList.add(item);
+     }
+   }
+   return resultList;
+ }
+
+ Future<void> addCategory(Cate.Category cate) async{
+   showLoading();
+   await _database.write(categoryCollection, data: cate.toJson(),path: cate.id);
+   hideLoading();
+   Get.back();
+ }
+
+ Future<void> deleteCategory(String cateID) async{
+   showLoading();
+   await _database.delete(categoryCollection, path: cateID);
+   hideLoading();
+   Get.back();
+ }
+
+ Future<void> addStatus(Status status) async{
+   showLoading();
+   await _database.write(statusCollection, data: status.toJson(),path: status.id);
+   hideLoading();
+   Get.back();
+ }
+
+ Future<void> deleteStatus(String statusID) async{
+   showLoading();
+   await _database.delete(statusCollection, path: statusID);
+   hideLoading();
+   Get.back();
+ }
+
+ Future<void> addAdvertisement(Advertisement advertisement) async{
+   showLoading();
+   await _database.write(advertisementCollection, data: advertisement.toJson(),path: advertisement.id);
+   hideLoading();
+   Get.back();
+ }
+
+ Future<void> deleteAdvertisement(String adID) async{
+   showLoading();
+   await _database.delete(advertisementCollection, path: adID);
+   hideLoading();
+   Get.back();
+ }
+
+ Future<void> addTag(Tag tag) async{
+   showLoading();
+   await _database.write(tagsCollection, data: tag.toJson(),path: tag.id);
+   hideLoading();
+   Get.back();
+ }
+
+ Future<void> deleteTag(String tagID) async{
+   showLoading();
+   await _database.delete(tagsCollection, path: tagID);
+   hideLoading();
+   Get.back();
+ }
+
 
   void changeMouseIndex(int i) {
     // Change Mouse Region
@@ -58,21 +150,6 @@ class HomeController extends GetxController {
     debugPrint("On Mouse Exist************");
     update();
   }
-
-  //BlueToothPrint Instance
-  //BluetoothPrint blueToothPrint = BluetoothPrint.instance;
-  //BlueToothDevice
-  //BluetoothDevice? blueToothDevice;
-
-  //Set Device and Connect
-  /* void setDeviceAndConnect(BluetoothDevice device) {
-    blueToothDevice = device;
-    if (!(blueToothDevice == null)) {
-      //We connect
-      blueToothPrint.connect(blueToothDevice!);
-    }
-    update();
-  }*/
 
   //Chage OwnBand
   void changeOwnBrandOrNot(bool value, bool isUpdate) {
@@ -112,50 +189,56 @@ class HomeController extends GetxController {
     bankSlipImage.value = image;
   }
 
-  void addToCart(ItemModel itemModel, String color, String size, int price,
-      String priceType) {
+  void addToCart(Product product,{ String? color, String? size}) {
+    debugPrint("********current user point inside addToCart: $currentUserPoint*******");
+    if(product.requirePoint! > 0 && isCanAdd(product.requirePoint!)){
+      currentUserPoint = currentUserPoint - (product.requirePoint! * 1);
+    }else if(product.requirePoint! > 0 && 
+    !isCanAdd(product.requirePoint!)){
+      showNotEnoughPoint();
+      return;
+    }
     try {
-      final PurchaseItem _item = myCart.firstWhere(
+      final PurchaseItem _item = myCart.firstWhere(//--if already exist--//
         (item) =>
-            item.id == itemModel.id &&
+            item.id == product.id &&
             item.color == color &&
-            item.size == size &&
-            item.price == price &&
-            item.priceType == priceType,
+            item.size == size,
       );
       myCart.value = myCart.map((element) {
         if (_item.id == element.id) {
           return PurchaseItem(
-            element.id,
-            element.itemName,
-            element.count + 1,
-            element.size,
-            element.color,
-            element.priceType,
-            element.isOwnBrand,
-            element.price,
-          );
+            id: element.id, 
+            itemName: element.itemName, 
+            count: element.count + 1, 
+            size: element.size, 
+            color: element.color, 
+            price: element.price,
+            );
         }
         return element;
       }).toList();
     } catch (e) {
-      myCart.add(PurchaseItem(
-        itemModel.id!,
-        itemModel.name,
-        1,
-        size,
-        color,
-        priceType,
-        itemModel.isOwnBrand,
-        price,
-      ));
+      myCartMap.putIfAbsent(product.id, () => 1);
+      myCart.add( //-----For new product that doesn't already exist before----//
+      PurchaseItem(
+            id: product.id, 
+            itemName: product.name, 
+            count: 1, 
+            size: size, 
+            color: color, 
+            price: product.price,
+            discountPrice: product.discountPrice,
+            requirePoint: product.requirePoint,
+            )
+      );
     }
   }
 
-  final RxList<ItemModel> items = <ItemModel>[].obs;
-  final RxList<ItemModel> brandItems = <ItemModel>[].obs; //Brand Item
-  final RxList<ItemModel> exportAndBrandItems = <ItemModel>[].obs;
-  final RxList<ItemModel> searchitems = <ItemModel>[].obs;
+  final RxList<Product> items = <Product>[].obs;
+  // final RxList<Product> brandItems = <Product>[].obs; //Brand Item
+  // final RxList<Product> exportAndBrandItems = <Product>[].obs;
+  final RxList<Product> searchitems = <Product>[].obs;
 
   //set export and brand items when edit page start
   /*void setExportAndBrandItems() {
@@ -168,103 +251,28 @@ class HomeController extends GetxController {
     });
   }*/
 
-  final Rx<ItemModel> selectedItem = ItemModel(
-    photo: '',
-    photo2: '',
-    photo3: '',
-    deliverytime: '',
-    brand: '',
-    discountprice: 0,
-    name: '',
-    price: 0,
-    color: '',
-    desc: '',
-    size: '',
-    star: 0,
-    category: '',
-    isOwnBrand: false,
-  ).obs;
+  final Rxn<Product?> selectedItem = Rxn<Product?>(null);
 
-  void setSelectedItem(ItemModel item) {
+  void setSelectedItem(Product item) {
     selectedItem.value = item;
   }
 
-  final Rx<ItemModel> editItem = ItemModel(
-    photo: '',
-    photo2: '',
-    photo3: '',
-    deliverytime: '',
-    brand: '',
-    discountprice: 0,
-    name: '',
-    price: 0,
-    color: '',
-    desc: '',
-    size: '',
-    star: 0,
-    category: '',
-    isOwnBrand: false,
-  ).obs;
-
-  void setEditItem(ItemModel itemModel) {
-    editItem.value = itemModel;
+  final Rxn<Product?> editItem = Rxn<Product?>(null);
+  void setEditItem(Product? product) {
+    editItem.value = product;
   }
 
-  ItemModel getItem(String id) {
+  Product? getItem(String id) {
     try {
       return items.firstWhere((e) => e.id == id);
     } catch (e) {
-      return ItemModel(
-        photo: '',
-        photo2: '',
-        photo3: '',
-        deliverytime: '',
-        brand: '',
-        discountprice: 0,
-        name: '',
-        price: 0,
-        color: '',
-        desc: '',
-        size: '',
-        star: 0,
-        category: '',
-        isOwnBrand: false,
-      );
+      return null;
     }
   }
 
-  //Get Brand Item
-  ItemModel getBrandItem(String id) {
-    try {
-      return brandItems.firstWhere((e) => e.id == id);
-    } catch (e) {
-      return ItemModel(
-        photo: '',
-        photo2: '',
-        photo3: '',
-        deliverytime: '',
-        brand: '',
-        discountprice: 0,
-        name: '',
-        price: 0,
-        color: '',
-        desc: '',
-        size: '',
-        star: 0,
-        category: '',
-        isOwnBrand: false,
-      );
-    }
-  }
-
-  List<ItemModel> getItems() => category.value == 'All'
+  List<Product> getItems() => category.value == 'All'
       ? items
       : items.where((e) => e.category == category.value).toList();
-
-  //GetBrandItems
-  List<ItemModel> getBrandItems() => brandCategory.value == 'All'
-      ? brandItems
-      : brandItems.where((e) => e.category == brandCategory.value).toList();
 
   List<String> categoryList() {
     final List<String> _data = [
@@ -289,43 +297,31 @@ class HomeController extends GetxController {
       'All',
     ];
 
-    for (var i = 0; i < brandItems.length; i++) {
-      if (!_data.contains(brandItems[i].category)) {
-        _data.add(brandItems[i].category);
-      }
-    }
-
-    if (brandItems.isEmpty) {
-      _data.clear();
-    }
     return _data;
   }
 
-  List<ItemModel> pickUp() =>
-      items.where((e) => e.category == 'New Products').toList();
+  // List<ItemModel> pickUp() =>
+  //     items.where((e) => e.category == 'New Products').toList();
 
-  List<ItemModel> hot() =>
-      items.where((e) => e.category == 'Hot Sales').toList();
+  List<Product> hot() =>
+      items.where((e) => e.category == hotSale).toList();
 
   void removeItem(String id) => items.removeWhere((item) => item.id == id);
 
   //int shipping() => myCart.isEmpty ? 0 : shippingFee;
 
   void addCount(PurchaseItem p) {
+    if(!isCanAdd(p.requirePoint!)){
+    }
+
     myCart.value = myCart.map((element) {
       if (element.id == p.id &&
           element.color == p.color &&
           element.size == p.size) {
-        return PurchaseItem(
-          element.id,
-          element.itemName,
-          element.count + 1,
-          element.size,
-          element.color,
-          element.priceType,
-          element.isOwnBrand,
-          element.price,
-        );
+            if(element.requirePoint! > 0){
+              currentUserPoint = currentUserPoint - (element.requirePoint! * 1);
+            }
+        return element.copyWith(count: element.count + 1);
       }
       return element;
     }).toList();
@@ -340,15 +336,10 @@ class HomeController extends GetxController {
           element.color == p.color &&
           element.size == p.size) {
         if (element.count > 1) {
-          return PurchaseItem(
-              element.id,
-              element.itemName,
-              element.count - 1,
-              element.size,
-              element.color,
-              element.priceType,
-              element.isOwnBrand,
-              element.price);
+          if(element.requirePoint! > 0){
+            currentUserPoint = currentUserPoint + (element.requirePoint! * 1);
+          }
+          return element.copyWith(count: element.count -1);
         }
         needToRemove = true;
         return element;
@@ -356,6 +347,7 @@ class HomeController extends GetxController {
       return element;
     }).toList();
     if (needToRemove) {
+      myCartMap.remove(p.id);
       myCart.removeWhere((element) =>
           element.id == p.id &&
           element.color == p.color &&
@@ -371,11 +363,11 @@ class HomeController extends GetxController {
     }
     int price = 0;
     for (var i = 0; i < myCart.length; i++) {
-      //print(items.firstWhere((element) => element.id == myCart[i].id).price);
-      debugPrint("**********each price:$i: ${myCart[i].price}");
-      /* price += items.firstWhere((element) => element.id == myCart[i].id).price *
-          myCart[i].count;*/
-      price += myCart[i].price * myCart[i].count;
+     if(myCart[i].discountPrice! > 0){ //-----for discount products----//
+         price += myCart[i].discountPrice! * myCart[i].count;
+     }else if(!(myCart[i].requirePoint! > 0)){//---for normal products----//
+         price += myCart[i].price * myCart[i].count;
+     }
     }
     subTotal = price;
     debugPrint("*************$subTotal");
@@ -385,45 +377,53 @@ class HomeController extends GetxController {
   }
 
   //Get HiveItem
-  HiveItem changeHiveItem(ItemModel model) {
+  HiveItem changeHiveItem(Product model) {
     return HiveItem(
-      id: model.id ?? "",
-      photo: model.photo,
-      photo2: model.photo2,
-      photo3: model.photo3,
-      name: model.name,
-      brand: model.brand,
-      deliverytime: model.deliverytime,
-      price: model.price,
-      discountprice: model.discountprice,
-      desc: model.desc,
-      color: model.color,
-      size: model.size,
-      star: model.star,
-      category: model.category,
-      isOwnBrand: model.isOwnBrand,
-    );
+      id: model.id, 
+      photo1: model.photo1, 
+      photo2: model.photo2, 
+      photo3: model.photo3, 
+      name: model.name, 
+      description: model.description, 
+      price: model.price, 
+      size: model.size, 
+      color: model.color, 
+      status: model.status, 
+      category: model.category, 
+      tags: model.tags, 
+      dateTime: model.dateTime,
+      discountPrice: model.discountPrice ?? 0,
+      love: model.love ?? 0,
+      comment: model.comment ?? [],
+      deliveryTime: model.deliveryTime,
+      requirePoint: model.requirePoint ?? 0,
+      advertisementID: model.advertisementID,
+      );
   }
 
   //Get ItemModel
-  ItemModel changeItemModel(HiveItem model) {
-    return ItemModel(
-      id: model.id,
-      photo: model.photo,
-      photo2: model.photo2,
-      photo3: model.photo3,
-      name: model.name,
-      brand: model.brand,
-      deliverytime: model.deliverytime,
-      price: model.price,
-      discountprice: model.discountprice,
-      desc: model.desc,
-      color: model.color,
-      size: model.size,
-      star: model.star,
-      category: model.category,
-      isOwnBrand: model.isOwnBrand,
-    );
+  Product changeItemModel(HiveItem model) {
+    return Product(
+      id: model.id, 
+      photo1: model.photo1, 
+      photo2: model.photo2, 
+      photo3: model.photo3, 
+      name: model.name, 
+      description: model.description, 
+      price: model.price, 
+      size: model.size, 
+      color: model.color, 
+      status: model.status, 
+      category: model.category, 
+      tags: model.tags, 
+      dateTime: model.dateTime,
+      discountPrice: model.discountPrice,
+      love: model.love,
+      comment: model.comment,
+      deliveryTime: model.deliveryTime,
+      requirePoint: model.requirePoint,
+      advertisementID: model.advertisementID,
+      );
   }
 
   final RxList<PurchaseModel> _purchcases = <PurchaseModel>[].obs; ////
@@ -439,19 +439,19 @@ class HomeController extends GetxController {
   final RxBool isLoading = false.obs;
 
   Future<void> proceedToPay() async {
-    if (isLoading.value) return;
-    isLoading.value = true;
-    Get.back();
+    showLoading();
+    final total = subTotal + townShipNameAndFee["fee"] as int;
     try {
       final list = getUserOrderData();
       final _purchase = PurchaseModel(
+        dateTime: DateTime.now().toString(),
+        id: Uuid().v1(),
         items: myCart
             .map((cart) =>
-                "${cart.id},${cart.itemName},${cart.color},${cart.size},${cart.count},${cart.price}")
-            .toList(),
+                cart).toList(),
         name: list[0],
         email: list[1],
-        phone: int.parse(list[2]),
+        phone: list[2],
         address: list[3],
         bankSlipImage: bankSlipImage.value.isEmpty ? null : bankSlipImage.value,
         deliveryTownshipInfo: [
@@ -459,12 +459,34 @@ class HomeController extends GetxController {
           townShipNameAndFee["fee"]
         ],
       );
+      final hivePurchase = HivePurchase(
+        id: Uuid().v1(),
+        items: _purchase.items
+                .map((e) => HivePurchaseItem(
+                      itemName: e.itemName,
+                      count: e.count,
+                      size: e.size,
+                      color: e.color,
+                      price: e.price,
+                      discountPrice: e.discountPrice,
+                      requirePoint: e.requirePoint,
+                    ))
+                .toList()
+            ,
+        totalPrice: total,
+        deliveryTownshipInfo: _purchase.deliveryTownshipInfo,
+        dateTime: DateTime.now(),
+      );
       await _database.writePurchaseData(_purchase).then((value) {
+        hideLoading();
+        Get.back();
         Get.snackbar("လူကြီးမင်း Order တင်ခြင်း", 'အောင်မြင်ပါသည်');
+        purchaseHiveBox.put(hivePurchase.id, hivePurchase);
       }); //submit success
       myCart.clear();
       navIndex.value = 0;
-      update([myCart, navIndex]);
+      update([myCart ,navIndex]);
+      myCart.clear();
     } catch (e) {
       Get.snackbar("လူကြီးမင်း Order တင်ခြင်း", 'မအောင်မြင်ပါ');
       print("proceed to pay error $e");
@@ -519,7 +541,11 @@ class HomeController extends GetxController {
       phoneController.clear();
       verificationController.clear();
     } catch (e) {
-      print("confirm error is $e");
+      _codeSentId.value = '';
+      Get.snackbar('','',backgroundColor: Colors.red,messageText: Text("Try Again!",style: TextStyle(
+        color: Colors.white,
+      )));
+      print("******confirm error is $e");
     }
   }
 
@@ -531,33 +557,33 @@ class HomeController extends GetxController {
     }
   }
 
-  Future<void> uploadProfile() async {
-    try {
-      final XFile? _file =
-          await _imagePicker.pickImage(source: ImageSource.gallery);
+  // Future<void> uploadProfile() async {
+  //   try {
+  //     final XFile? _file =
+  //         await _imagePicker.pickImage(source: ImageSource.gallery);
 
-      if (_file != null) {
-        await _api.uploadFile(
-          _file.path,
-          fileName: user.value.user?.uid,
-          folder: profileUrl,
-        );
-        await _database.write(
-          profileCollection,
-          data: {
-            'link': user.value.user?.uid,
-          },
-          path: user.value.user?.uid,
-        );
-        user.value.update(
-          newProfileImage: '$baseUrl$profileUrl${user.value.user?.uid}',
-        );
-        update([user]);
-      }
-    } catch (e) {
-      print("profile upload error $e");
-    }
-  }
+  //     if (_file != null) {
+  //       await _api.uploadFile(
+  //         _file.path,
+  //         fileName: user.value.user?.uid,
+  //         folder: profileUrl,
+  //       );
+  //       await _database.write(
+  //         profileCollection,
+  //         data: {
+  //           'link': user.value.user?.uid,
+  //         },
+  //         path: user.value.user?.uid,
+  //       );
+  //       user.value.update(
+  //         newProfileImage: '$baseUrl$profileUrl${user.value.user?.uid}',
+  //       );
+  //       update([user]);
+  //     }
+  //   } catch (e) {
+  //     print("profile upload error $e");
+  //   }
+  // }
 
   //Get User's Order Data
   List<String> getUserOrderData() {
@@ -587,64 +613,123 @@ class HomeController extends GetxController {
           .setStringList("userOrder", [name, email, phone, address]);
     }
   }
-
+ 
+ //Loading Font to not take time when user in App to this font
+  late ByteData oleoBold;
+  late ByteData oleoRegular;
+  late ByteData robotoLight;
+  late ByteData robotoBold;
+  late var image;
   @override
   void onInit() async {
     super.onInit();
-    ever(items, addToExportAndBrandList);
-    ever(brandItems, addToExportAndBrandList);
+    oleoBold = await rootBundle.load("fonts/OleoScriptSwashCaps-Bold.ttf");
+    oleoRegular =
+        await rootBundle.load("fonts/OleoScriptSwashCaps-Regular.ttf");
+    robotoLight = await rootBundle.load("fonts/Roboto-Light.ttf");
+    robotoBold = await rootBundle.load("fonts/Roboto-Bold.ttf");
     sharedPref = await SharedPreferences.getInstance();
     if (getUserOrderData().isNotEmpty) {
       checkOutStep.value = 1;
     } // SharedPreference to Stroe
     _database.watch(itemCollection).listen((event) {
       items.value =
-          event.docs.map((e) => ItemModel.fromJson(e.data(), e.id)).toList();
+          event.docs.map((e) => Product.fromJson(e.data())).toList();
      
     });
-    //For Branch Collection
-    _database.watch(brandCollection).listen((event) {
-      brandItems.value =
-          event.docs.map((e) => ItemModel.fromJson(e.data(), e.id)).toList();
-    });
 
-    ///
-    _auth.onAuthChange().listen((_) async {
-      user.value = AuthUser(user: _);
-      if (_ == null) {
-        authorized.value = false;
-      } else {
-        authorized.value = true;
-        await _database.write(
-          userCollection,
-          data: {
-            'uid': _.uid,
-            'phone': _.phoneNumber,
-          },
-          path: _.uid,
-        );
-        final DocumentSnapshot<Map<String, dynamic>> _data =
-            await _database.read(userCollection, path: _.uid);
-        user.value = user.value.update(
-          newIsAdmin: _data.exists,
-        );
-        final DocumentSnapshot<Map<String, dynamic>> _profile =
-            await _database.read(profileCollection, path: _.uid);
-        user.value = user.value.update(
-          newProfileImage: _profile.data()?['link'],
-        );
-        if (user.value.isAdmin) {
+    //-----------------------On Auth Change-------------------------------//
+    _auth.onAuthChange().listen((user) async {
+      if (user == null) {
+        currentUser.value = null;
+      }else {
+        if (!(user == null)) {
+          debugPrint("*******user is not null****");
+          //we need to check document reference is already defined
+          final snapshot = await FirebaseFirestore.instance
+              .collection(adminUserCollection)
+              .doc(user.uid)
+              .get();
+          if (!snapshot.exists) {
+            //If not define before
+            debugPrint("******Document is not exist so,we write to firebase"
+            "because this user is completely new user.");
+            currentUser.value = AuthUser(
+              id: user.uid,
+              emailAddress: user.phoneNumber!,
+              userName: user.displayName ?? "",
+              image: user.photoURL ?? "",
+              points: 0,
+            );
+            await _database.write(
+              adminUserCollection,
+              path: currentUser.value!.id,
+              data: currentUser.value!.toJson(),
+            );
+          }
+
+         //-----------we watch this current user's document-----------//
+          FirebaseFirestore.instance
+              .collection(adminUserCollection)
+              .doc(user.uid)
+              .snapshots()
+              .listen((event) {
+              debugPrint("****UserEvent: ${event.data()}");
+              currentUser.value = AuthUser.fromJson(event.data()!);
+              currentUserPoint = currentUser.value!.points;
+              debugPrint("************current user points: $currentUserPoint*********");
+          });
+        }
+        // final DocumentSnapshot<Map<String, dynamic>> _data =
+        //     await _database.read(userCollection, path: _.uid);
+        // user.value = user.value.update(
+        //   newIsAdmin: _data.exists,
+        // );
+        // final DocumentSnapshot<Map<String, dynamic>> _profile =
+        //     await _database.read(profileCollection, path: _.uid);
+        // user.value = user.value.update(
+        //   newProfileImage: _profile.data()?['link'],
+        // );
+        // if (user.value.isAdmin) {
           _database.watchOrder(purchaseCollection).listen((event) {
             if (event.docs.isEmpty) {
               _purchcases.clear();
             } else {
               _purchcases.value = event.docs
-                  .map((e) => PurchaseModel.fromJson(e.data(), e.id))
+                  .map((e) => PurchaseModel.fromJson(e.data()))
                   .toList();
             }
           });
+          _database.watch(advertisementCollection).listen((event) {
+            if(event.docs.isEmpty){
+              advertisementList.clear();
+            }else{
+              advertisementList.value = event.docs.map((e) => Advertisement.fromJson(e.data())).toList();
+            }
+          });
+          _database.watch(statusCollection).listen((event) {
+            if(event.docs.isEmpty){
+              statusList.clear();
+            }else{
+              statusList.value = event.docs.map((e) => Status.fromJson(e.data())).toList();
+            }
+          });
+          _database.watch(categoryCollection).listen((event) {
+            if(event.docs.isEmpty){
+              categories.clear();
+            }else{
+              categories.value = event.docs.map((e) => Cate.Category.fromJson(e.data())).toList();
+            }
+          });
+          _database.watch(tagsCollection).listen((event) {
+            if(event.docs.isEmpty){
+              tagsList.clear();
+            }else{
+              tagsList.value = event.docs.map((e) => Tag.fromJson(e.data())).toList();
+            }
+          });
         }
-      }
+      //}
     });
 
     //Listen BlueTooth State
@@ -686,7 +771,7 @@ class HomeController extends GetxController {
 
   void onSearch(String name) {
     isSearch.value = true;
-    searchitems.value = exportAndBrandItems
+    searchitems.value = items
         .where((p0) => p0.name.toLowerCase().contains(name.toLowerCase()))
         .toList();
   }
@@ -738,11 +823,46 @@ class HomeController extends GetxController {
       ),
     );
   }
+  //-------------For Reward----------------------//
+  
+  Future<void> signInWithGoogle(String redirectRouteUrl) async {
+    showLoading();
+    try {
+      // Trigger the authentication flow
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
-  addToExportAndBrandList(List<ItemModel> callback) {
-    exportAndBrandItems.value = [];
-    callback.forEach((element) {
-      exportAndBrandItems.add(element);
-    });
+      // Obtain the auth details from the request
+      final GoogleSignInAuthentication? googleAuth =
+          await googleUser?.authentication;
+
+      // Create a new credential
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
+
+      // Once signed in, return the UserCredential
+      await FirebaseAuth.instance.signInWithCredential(credential);
+      hideLoading();
+      Get.offNamed(redirectRouteUrl);
+    } catch (e) {
+      debugPrint("*******$e");
+      hideLoading();
+    }
   }
+  int currentUserPoint = 0;
+
+  bool isCanAdd(int rewardPoint) {
+    return currentUserPoint > (rewardPoint * 1);
+  }
+  bool isContainRewardProductInCart(Product p){
+    bool result = false;
+    myCart.map((element){
+      if(element.id == p.id){
+        result = true;
+      }
+    });
+    return result;
+  }
+  //---------------------------------------------//
 }
