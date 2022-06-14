@@ -179,7 +179,8 @@ class _ManageAdvertisementScreenState extends State<ManageAdvertisementScreen> {
                             itemBuilder: (context,index){
                               final item = products[index];
                               return Obx((){
-                                final isContain = _adController.advertisementProductMap.containsKey(item.id);
+                                final isContain = _adController.advertisementProductMap.containsKey(item.id) ||
+                                 widget.advertisement!.products.containsKey(item.id);
                                 return InkWell(
                                   onTap: () => _adController.addOrRemove(item.id),
                                   child: ConstrainedBox(

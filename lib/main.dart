@@ -10,6 +10,9 @@ import 'package:kozarni_ecome/data/constant.dart';
 import 'package:kozarni_ecome/model/hive_item.dart';
 import 'package:kozarni_ecome/routes/routes.dart';
 
+import 'model/hive_purchase.dart';
+import 'model/hive_purchase_item.dart';
+
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
   print('Handling a background message ${message.messageId}');
@@ -21,7 +24,10 @@ Future<void> main() async {
   await FirebaseMessaging.instance.subscribeToTopic('order');
   await Hive.initFlutter();
   Hive.registerAdapter<HiveItem>(HiveItemAdapter());
+  Hive.registerAdapter<HivePurchase>(HivePurchaseAdapter());
+  Hive.registerAdapter<HivePurchaseItem>(HivePurchaseItemAdapter());
   await Hive.openBox<HiveItem>(boxName);
+  await Hive.openBox<HivePurchase>(purchaseBox);
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   Get.put(HomeController());
   runApp(MyApp());
@@ -129,6 +135,7 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       initialRoute: introScreen,
       getPages: routes,
+      defaultTransition: Transition.fade,
     );
   }
 }

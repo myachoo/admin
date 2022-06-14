@@ -34,7 +34,8 @@ class TagButtonList extends StatelessWidget {
                       ),
                       child: Obx(
                         () {
-                          final isContain = uploadController.tagsMap.containsKey(tag.id);
+                          final isContain = uploadController.tagsMap.containsKey(tag.id) || 
+                          (!(controller.editItem.value == null) && (controller.editItem.value!.tags.contains(tag.name)));
                           return ChoiceChip(
                             selectedColor: homeIndicatorColor,
                             onSelected: (v) => uploadController.addOrRemoveTag(tag.id, tag.name),

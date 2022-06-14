@@ -8,7 +8,7 @@ part of 'hive_item.dart';
 
 class HiveItemAdapter extends TypeAdapter<HiveItem> {
   @override
-  final int typeId = 2;
+  final int typeId = 3;
 
   @override
   HiveItem read(BinaryReader reader) {
@@ -25,8 +25,8 @@ class HiveItemAdapter extends TypeAdapter<HiveItem> {
       description: fields[5] as String,
       price: fields[6] as int,
       discountPrice: fields[7] as int,
-      size: fields[8] as String,
-      color: fields[9] as String,
+      size: fields[8] as String?,
+      color: fields[9] as String?,
       requirePoint: fields[10] as int,
       advertisementID: fields[11] as String?,
       category: fields[13] as String,

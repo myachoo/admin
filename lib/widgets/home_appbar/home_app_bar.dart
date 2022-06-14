@@ -99,13 +99,14 @@ class HomeAppBar extends StatelessWidget with PreferredSizeWidget{
                   },
                 ),
               ),
-              onPressed: () async {
-                try {
-                  await launch('https://m.me/Cindy.Branded.Export.Fashion');
-                } catch (e) {
-                  print(e);
-                }
-              },
+              // onPressed: () async {
+              //   try {
+              //     await launch('https://m.me/Cindy.Branded.Export.Fashion');
+              //   } catch (e) {
+              //     print(e);
+              //   }
+              // },
+              onPressed: () => Get.toNamed(favouriteUrl),
               child: FaIcon(
                 FontAwesomeIcons.heart,
                 color: Colors.black,
@@ -130,12 +131,8 @@ class HomeAppBar extends StatelessWidget with PreferredSizeWidget{
                   },
                 ),
               ),
-              onPressed: () async {
-                try {
-                  await launch('https://m.me/Cindy.Branded.Export.Fashion');
-                } catch (e) {
-                  print(e);
-                }
+              onPressed: ()  {
+                Get.toNamed(cartUrl);
               },
               child: FaIcon(
                 FontAwesomeIcons.shoppingBasket,

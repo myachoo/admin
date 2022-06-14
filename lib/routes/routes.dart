@@ -1,18 +1,19 @@
 import 'package:get/route_manager.dart';
-import 'package:kozarni_ecome/binding/manage_binding.dart';
 import 'package:kozarni_ecome/binding/upload_binding.dart';
-import 'package:kozarni_ecome/model/advertisement.dart';
 import 'package:kozarni_ecome/screen/advertisement/view/advertisement_screen.dart';
 import 'package:kozarni_ecome/screen/blue_tooth_screen.dart';
+import 'package:kozarni_ecome/screen/cart.dart';
 import 'package:kozarni_ecome/screen/check_out_screen.dart';
 import 'package:kozarni_ecome/screen/detail_screen.dart';
 import 'package:kozarni_ecome/screen/home_screen.dart';
 import 'package:kozarni_ecome/screen/item_upload_screen.dart';
-import 'package:kozarni_ecome/screen/product_category/product_category_view.dart';
-import 'package:kozarni_ecome/screen/purchase_screen.dart';
+import 'package:kozarni_ecome/screen/manage_item.dart';
+import 'package:kozarni_ecome/screen/product_category/view/product_category_view.dart';
 import 'package:kozarni_ecome/screen/search_screen.dart';
 import 'package:kozarni_ecome/screen/status/status_screen.dart';
 import 'package:kozarni_ecome/screen/tags/tags_screen.dart';
+import 'package:kozarni_ecome/screen/user_order_view.dart';
+import 'package:kozarni_ecome/screen/view/favourite.dart';
 import 'package:kozarni_ecome/screen/view_all/view/view_all.dart';
 
 import '../intro_screen.dart';
@@ -31,6 +32,8 @@ const String categoriesUrl = '/categories';
 const String statusUrl = '/status';
 const String tagsUrl = '/tags';
 const String viewAllUrl = '/view_all';
+const String cartUrl = '/cart_url';
+const String favouriteUrl = '/favourite';
 
 List<GetPage> routes = [
   GetPage(
@@ -56,7 +59,7 @@ List<GetPage> routes = [
   ),
   GetPage(
     name: purchaseScreen,
-    page: () => PurchaseScreen(),
+    page: () => UserOrderView(),
   ),
   GetPage(
     name: blueToothScreen,
@@ -85,5 +88,17 @@ List<GetPage> routes = [
   GetPage(
     name: viewAllUrl,
     page: () => ViewAllScreen(),
+  ),
+  GetPage(
+    name: cartUrl,
+    page: () => CartView(),
+  ),
+  GetPage(
+    name: mangeItemScreen,
+    page: () => ManageItem(),
+  ),
+  GetPage(
+    name: favouriteUrl,
+    page: () => FavouriteView(),
   ),
 ];

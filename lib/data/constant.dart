@@ -23,11 +23,12 @@ const String categoryCollection = 'categories';
 const String statusCollection  = 'statusCollection';
 const String advertisementCollection = 'advertisementCollection';
 const String tagsCollection = 'tagsCollection';
+const String adminUserCollection = 'adminUserCollection';
 /*const List<String> priceList = [
   '၁ ထည် လက်လီ ဈေးနှုန်း',
   'လက်ကား ဈေးနှုန်း',
 ];*/
-const String boxName = "favouritesBOX";
+const String boxName = "favouritesBOXes";
 
 
 ///////////////
@@ -38,3 +39,6 @@ const String rewardStatus = "Beauty Insider Rewards";
 //
 const String forRewardProducts = "For Reward Products";
 const String forNewProducts = "For New Products";
+
+const String purchaseBox = "purchasesBoxs";
+

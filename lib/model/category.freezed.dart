@@ -22,6 +22,8 @@ Category _$CategoryFromJson(Map<String, dynamic> json) {
 mixin _$Category {
   String get name => throw _privateConstructorUsedError;
   String get id => throw _privateConstructorUsedError;
+  @JsonKey(nullable: true, defaultValue: "")
+  String? get image => throw _privateConstructorUsedError;
   DateTime get dateTime => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -34,7 +36,11 @@ mixin _$Category {
 abstract class $CategoryCopyWith<$Res> {
   factory $CategoryCopyWith(Category value, $Res Function(Category) then) =
       _$CategoryCopyWithImpl<$Res>;
-  $Res call({String name, String id, DateTime dateTime});
+  $Res call(
+      {String name,
+      String id,
+      @JsonKey(nullable: true, defaultValue: "") String? image,
+      DateTime dateTime});
 }
 
 /// @nodoc
@@ -49,6 +55,7 @@ class _$CategoryCopyWithImpl<$Res> implements $CategoryCopyWith<$Res> {
   $Res call({
     Object? name = freezed,
     Object? id = freezed,
+    Object? image = freezed,
     Object? dateTime = freezed,
   }) {
     return _then(_value.copyWith(
@@ -60,6 +67,10 @@ class _$CategoryCopyWithImpl<$Res> implements $CategoryCopyWith<$Res> {
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
+      image: image == freezed
+          ? _value.image
+          : image // ignore: cast_nullable_to_non_nullable
+              as String?,
       dateTime: dateTime == freezed
           ? _value.dateTime
           : dateTime // ignore: cast_nullable_to_non_nullable
@@ -74,7 +85,11 @@ abstract class _$$_CategoryCopyWith<$Res> implements $CategoryCopyWith<$Res> {
           _$_Category value, $Res Function(_$_Category) then) =
       __$$_CategoryCopyWithImpl<$Res>;
   @override
-  $Res call({String name, String id, DateTime dateTime});
+  $Res call(
+      {String name,
+      String id,
+      @JsonKey(nullable: true, defaultValue: "") String? image,
+      DateTime dateTime});
 }
 
 /// @nodoc
@@ -91,6 +106,7 @@ class __$$_CategoryCopyWithImpl<$Res> extends _$CategoryCopyWithImpl<$Res>
   $Res call({
     Object? name = freezed,
     Object? id = freezed,
+    Object? image = freezed,
     Object? dateTime = freezed,
   }) {
     return _then(_$_Category(
@@ -102,6 +118,10 @@ class __$$_CategoryCopyWithImpl<$Res> extends _$CategoryCopyWithImpl<$Res>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
+      image: image == freezed
+          ? _value.image
+          : image // ignore: cast_nullable_to_non_nullable
+              as String?,
       dateTime: dateTime == freezed
           ? _value.dateTime
           : dateTime // ignore: cast_nullable_to_non_nullable
@@ -113,7 +133,11 @@ class __$$_CategoryCopyWithImpl<$Res> extends _$CategoryCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$_Category implements _Category {
-  _$_Category({required this.name, required this.id, required this.dateTime});
+  _$_Category(
+      {required this.name,
+      required this.id,
+      @JsonKey(nullable: true, defaultValue: "") this.image,
+      required this.dateTime});
 
   factory _$_Category.fromJson(Map<String, dynamic> json) =>
       _$$_CategoryFromJson(json);
@@ -123,11 +147,14 @@ class _$_Category implements _Category {
   @override
   final String id;
   @override
+  @JsonKey(nullable: true, defaultValue: "")
+  final String? image;
+  @override
   final DateTime dateTime;
 
   @override
   String toString() {
-    return 'Category(name: $name, id: $id, dateTime: $dateTime)';
+    return 'Category(name: $name, id: $id, image: $image, dateTime: $dateTime)';
   }
 
   @override
@@ -137,6 +164,7 @@ class _$_Category implements _Category {
             other is _$_Category &&
             const DeepCollectionEquality().equals(other.name, name) &&
             const DeepCollectionEquality().equals(other.id, id) &&
+            const DeepCollectionEquality().equals(other.image, image) &&
             const DeepCollectionEquality().equals(other.dateTime, dateTime));
   }
 
@@ -146,6 +174,7 @@ class _$_Category implements _Category {
       runtimeType,
       const DeepCollectionEquality().hash(name),
       const DeepCollectionEquality().hash(id),
+      const DeepCollectionEquality().hash(image),
       const DeepCollectionEquality().hash(dateTime));
 
   @JsonKey(ignore: true)
@@ -163,6 +192,7 @@ abstract class _Category implements Category {
   factory _Category(
       {required final String name,
       required final String id,
+      @JsonKey(nullable: true, defaultValue: "") final String? image,
       required final DateTime dateTime}) = _$_Category;
 
   factory _Category.fromJson(Map<String, dynamic> json) = _$_Category.fromJson;
@@ -171,6 +201,9 @@ abstract class _Category implements Category {
   String get name => throw _privateConstructorUsedError;
   @override
   String get id => throw _privateConstructorUsedError;
+  @override
+  @JsonKey(nullable: true, defaultValue: "")
+  String? get image => throw _privateConstructorUsedError;
   @override
   DateTime get dateTime => throw _privateConstructorUsedError;
   @override

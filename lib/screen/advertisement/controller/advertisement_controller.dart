@@ -44,11 +44,13 @@ class AdvertisementController extends GetxController {
     showLoading();
     await _database.delete(advertisementCollection, path: id);
     hideLoading();
+    Get.back();
   }
 
   Future<void> saveAdvertisement(Advertisement advertisement) async{
     showLoading();
     await _database.write(advertisementCollection, data: advertisement.toJson(),path: advertisement.id);
     hideLoading();
+    Get.back();
   }
 }

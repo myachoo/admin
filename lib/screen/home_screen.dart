@@ -1,17 +1,13 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:kozarni_ecome/controller/home_controller.dart';
-import 'package:kozarni_ecome/data/constant.dart';
-import 'package:kozarni_ecome/routes/routes.dart';
 import 'package:kozarni_ecome/screen/shop.dart';
 import 'package:kozarni_ecome/screen/view/hot.dart';
 import 'package:kozarni_ecome/screen/view/home.dart';
 import 'package:kozarni_ecome/widgets/bottom_nav.dart';
 import 'package:kozarni_ecome/widgets/home_appbar/home_app_bar.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import 'view/profile.dart';
 

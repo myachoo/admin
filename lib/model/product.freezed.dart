@@ -29,8 +29,10 @@ mixin _$Product {
   int get price => throw _privateConstructorUsedError;
   @JsonKey(defaultValue: 0)
   int? get discountPrice => throw _privateConstructorUsedError;
-  String get size => throw _privateConstructorUsedError;
-  String get color => throw _privateConstructorUsedError;
+  @JsonKey(nullable: true)
+  String? get size => throw _privateConstructorUsedError;
+  @JsonKey(nullable: true)
+  String? get color => throw _privateConstructorUsedError;
   @JsonKey(defaultValue: 0)
   int? get requirePoint => throw _privateConstructorUsedError;
   @JsonKey(nullable: true)
@@ -64,8 +66,8 @@ abstract class $ProductCopyWith<$Res> {
       String description,
       int price,
       @JsonKey(defaultValue: 0) int? discountPrice,
-      String size,
-      String color,
+      @JsonKey(nullable: true) String? size,
+      @JsonKey(nullable: true) String? color,
       @JsonKey(defaultValue: 0) int? requirePoint,
       @JsonKey(nullable: true) String? advertisementID,
       String status,
@@ -143,11 +145,11 @@ class _$ProductCopyWithImpl<$Res> implements $ProductCopyWith<$Res> {
       size: size == freezed
           ? _value.size
           : size // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       color: color == freezed
           ? _value.color
           : color // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       requirePoint: requirePoint == freezed
           ? _value.requirePoint
           : requirePoint // ignore: cast_nullable_to_non_nullable
@@ -203,8 +205,8 @@ abstract class _$$_ProductCopyWith<$Res> implements $ProductCopyWith<$Res> {
       String description,
       int price,
       @JsonKey(defaultValue: 0) int? discountPrice,
-      String size,
-      String color,
+      @JsonKey(nullable: true) String? size,
+      @JsonKey(nullable: true) String? color,
       @JsonKey(defaultValue: 0) int? requirePoint,
       @JsonKey(nullable: true) String? advertisementID,
       String status,
@@ -283,11 +285,11 @@ class __$$_ProductCopyWithImpl<$Res> extends _$ProductCopyWithImpl<$Res>
       size: size == freezed
           ? _value.size
           : size // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       color: color == freezed
           ? _value.color
           : color // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       requirePoint: requirePoint == freezed
           ? _value.requirePoint
           : requirePoint // ignore: cast_nullable_to_non_nullable
@@ -340,8 +342,8 @@ class _$_Product implements _Product {
       required this.description,
       required this.price,
       @JsonKey(defaultValue: 0) this.discountPrice,
-      required this.size,
-      required this.color,
+      @JsonKey(nullable: true) this.size,
+      @JsonKey(nullable: true) this.color,
       @JsonKey(defaultValue: 0) this.requirePoint,
       @JsonKey(nullable: true) this.advertisementID,
       required this.status,
@@ -375,9 +377,11 @@ class _$_Product implements _Product {
   @JsonKey(defaultValue: 0)
   final int? discountPrice;
   @override
-  final String size;
+  @JsonKey(nullable: true)
+  final String? size;
   @override
-  final String color;
+  @JsonKey(nullable: true)
+  final String? color;
   @override
   @JsonKey(defaultValue: 0)
   final int? requirePoint;
@@ -495,8 +499,8 @@ abstract class _Product implements Product {
       required final String description,
       required final int price,
       @JsonKey(defaultValue: 0) final int? discountPrice,
-      required final String size,
-      required final String color,
+      @JsonKey(nullable: true) final String? size,
+      @JsonKey(nullable: true) final String? color,
       @JsonKey(defaultValue: 0) final int? requirePoint,
       @JsonKey(nullable: true) final String? advertisementID,
       required final String status,
@@ -527,9 +531,11 @@ abstract class _Product implements Product {
   @JsonKey(defaultValue: 0)
   int? get discountPrice => throw _privateConstructorUsedError;
   @override
-  String get size => throw _privateConstructorUsedError;
+  @JsonKey(nullable: true)
+  String? get size => throw _privateConstructorUsedError;
   @override
-  String get color => throw _privateConstructorUsedError;
+  @JsonKey(nullable: true)
+  String? get color => throw _privateConstructorUsedError;
   @override
   @JsonKey(defaultValue: 0)
   int? get requirePoint => throw _privateConstructorUsedError;

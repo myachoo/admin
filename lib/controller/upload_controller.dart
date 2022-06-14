@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:kozarni_ecome/controller/home_controller.dart';
 import 'package:kozarni_ecome/data/constant.dart';
-import 'package:kozarni_ecome/model/item.dart';
 import 'package:kozarni_ecome/service/api.dart';
 import 'package:kozarni_ecome/service/database.dart';
 import 'package:kozarni_ecome/widgets/show_loading/show_loading.dart';
@@ -57,8 +56,8 @@ class UploadController extends GetxController {
      photo3Controller.text = editItem.photo3;
      nameController.text = editItem.name;
      descriptionController.text = editItem.description;
-     sizeController.text = editItem.size;
-     colorController.text = editItem.color;
+     sizeController.text = editItem.size ?? "";
+     colorController.text = editItem.color ?? "";
      priceController.text = editItem.price.toString();
      discountPriceController.text = editItem.discountPrice.toString();
      requirePointController.text = editItem.requirePoint.toString();
@@ -124,13 +123,15 @@ class UploadController extends GetxController {
   }
 
   Future<void> upload() async {
+    debugPrint("*******EditItemID: ${_homeController.editItem.value!.id}");
     showLoading();
     try {
-      isUploading.value = true;
       if (form.currentState?.validate() == true
           && _homeController.category.isNotEmpty && status.isNotEmpty) {
         final DateTime dateTime = DateTime.now();
         if (_homeController.editItem.value != null) { //For Update
+        
+          debugPrint("******update***");
           await _database.update(
             itemCollection,
             path: _homeController.editItem.value!.id,
@@ -154,10 +155,12 @@ class UploadController extends GetxController {
                 .toJson(),
           );
         } else {//For Upload
+          final id = Uuid().v1();
           await _database.write(
             itemCollection,
+            path: id,
             data: Product(
-              id: Uuid().v1(),
+              id: id,
               photo1: photo1Controller.text,
                   photo2: photo2Controller.text,
                   photo3: photo3Controller.text,
@@ -177,7 +180,6 @@ class UploadController extends GetxController {
           );
         }
         hideLoading();
-        isUploading.value = false;
         Get.snackbar('Success', 'Uploaded successfully!');
         filePath.value = '';
         return;
@@ -187,7 +189,7 @@ class UploadController extends GetxController {
     } catch (e) {
       hideLoading();
       isUploading.value = false;
-      print("upload error $e");
+      print("******Upload Error: $e********");
     }
   }
 }

@@ -9,6 +9,7 @@ part of 'category.dart';
 _$_Category _$$_CategoryFromJson(Map<String, dynamic> json) => _$_Category(
       name: json['name'] as String,
       id: json['id'] as String,
+      image: json['image'] as String? ?? '',
       dateTime: DateTime.parse(json['dateTime'] as String),
     );
 
@@ -16,5 +17,6 @@ Map<String, dynamic> _$$_CategoryToJson(_$_Category instance) =>
     <String, dynamic>{
       'name': instance.name,
       'id': instance.id,
+      'image': instance.image,
       'dateTime': instance.dateTime.toIso8601String(),
     };

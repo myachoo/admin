@@ -1,29 +1,37 @@
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/src/foundation/annotations.dart' hide Category;
+import 'package:hive/hive.dart';
 import 'package:kozarni_ecome/model/advertisement.dart';
 import 'package:kozarni_ecome/model/category.dart' as Cate;
 import 'package:image_picker/image_picker.dart';
 import 'package:kozarni_ecome/data/constant.dart';
 import 'package:kozarni_ecome/data/enum.dart';
 import 'package:kozarni_ecome/model/hive_item.dart';
-import 'package:kozarni_ecome/model/item.dart';
 import 'package:kozarni_ecome/model/product.dart';
-import 'package:kozarni_ecome/model/purchase.dart';
 import 'package:kozarni_ecome/model/tag.dart';
 import 'package:kozarni_ecome/model/user.dart';
 import 'package:kozarni_ecome/model/view_all_model.dart';
 import 'package:kozarni_ecome/service/api.dart';
 import 'package:kozarni_ecome/service/auth.dart';
 import 'package:kozarni_ecome/service/database.dart';
+import 'package:kozarni_ecome/widgets/show_dialog/show_dialog.dart';
 import 'package:kozarni_ecome/widgets/show_loading/show_loading.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
 
+import '../model/hive_purchase.dart';
+import '../model/hive_purchase_item.dart';
+import '../model/purchase_item.dart';
+import '../model/real_purchase.dart';
 import '../model/status.dart';
-import '../utils/utils.dart';
 
 class HomeController extends GetxController {
   final Auth _auth = Auth();
@@ -32,49 +40,13 @@ class HomeController extends GetxController {
   final ImagePicker _imagePicker = ImagePicker();
   Rxn<AuthUser?> currentUser = Rxn<AuthUser?>(null);
 ///////////////////////////For View All Screen////////////////////////////////
-  ViewAllModel viewAllModel = ViewAllModel.empty();
-  RxList<Product> viewAllResultProducts = <Product>[].obs;
-  List<String> viewAllCategories = [];
-  RxBool isRefresh = true.obs;
-  var sortPrice = SortPrice.none.obs;
-
-  void soltingPriceList(SortPrice value){
-    sortPrice.value = value;
-    viewAllResultProducts.value = viewAllModel.products;
-    switch (value) {
-      case SortPrice.lowToHigh:
-        viewAllResultProducts.sort((a,b) => a.price.compareTo(b.price));
-        break;
-      case SortPrice.highToLow:
-        viewAllResultProducts.sort((a,b) => a.price.compareTo(b.price));
-        viewAllResultProducts.value = viewAllResultProducts.reversed.toList();
-        break;
-      default:
-    }
-  }
-
-  void refreshViewAll() {
-    sortPrice.value = SortPrice.none;
-    isRefresh.value = true;
-    category.value = "";
-    viewAllResultProducts.value = viewAllModel.products;
-  }
-
-  void changeAllViewCategory(String value){
-    isRefresh.value = false;
-    category.value = value;
-    viewAllResultProducts.value = viewAllModel.products.where((element) => element.category == value).toList();
-  }
-
-  void setViewAllProducts(ViewAllModel value){
-    isRefresh.value = false;
+ViewAllModel viewAllModel = ViewAllModel.empty();
+RxMap<String,dynamic> myCartMap = <String,dynamic>{}.obs;
+void setViewAllProducts(ViewAllModel value){
     viewAllModel = value;
-    viewAllResultProducts.value = value.products;
-    viewAllCategories = value.products.map((e) => e.category).toSet().toList();
   }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
   final RxBool authorized = false.obs;
-  final Rx<AuthUser> user = AuthUser().obs;
 
   final RxBool phoneState = false.obs;
   final codeSentOnWeb = false.obs; //codeSentOnWeb on Web
@@ -93,7 +65,8 @@ class HomeController extends GetxController {
 
   final RxString _codeSentId = ''.obs;
   final RxInt _codeSentToken = 0.obs;
-
+  Box<HivePurchase> purchaseHiveBox =
+      Hive.box(purchaseBox);
   final RxList<PurchaseItem> myCart = <PurchaseItem>[].obs;
 
   bool isOwnBrand = false;
@@ -104,55 +77,71 @@ class HomeController extends GetxController {
  final RxList<Advertisement> advertisementList = <Advertisement>[].obs;
  final RxList<Tag> tagsList = <Tag>[].obs;
 
+ List<Product> getAdvertisementsProductList(Map<String,String> productMap){
+   List<Product> resultList = [];
+   for (var item in items) {
+     if(productMap.containsKey(item.id)){
+       resultList.add(item);
+     }
+   }
+   return resultList;
+ }
+
  Future<void> addCategory(Cate.Category cate) async{
    showLoading();
    await _database.write(categoryCollection, data: cate.toJson(),path: cate.id);
    hideLoading();
+   Get.back();
  }
 
  Future<void> deleteCategory(String cateID) async{
    showLoading();
    await _database.delete(categoryCollection, path: cateID);
    hideLoading();
+   Get.back();
  }
 
  Future<void> addStatus(Status status) async{
    showLoading();
    await _database.write(statusCollection, data: status.toJson(),path: status.id);
    hideLoading();
+   Get.back();
  }
 
  Future<void> deleteStatus(String statusID) async{
    showLoading();
    await _database.delete(statusCollection, path: statusID);
    hideLoading();
+   Get.back();
  }
 
  Future<void> addAdvertisement(Advertisement advertisement) async{
    showLoading();
    await _database.write(advertisementCollection, data: advertisement.toJson(),path: advertisement.id);
    hideLoading();
+   Get.back();
  }
 
  Future<void> deleteAdvertisement(String adID) async{
    showLoading();
    await _database.delete(advertisementCollection, path: adID);
    hideLoading();
+   Get.back();
  }
 
  Future<void> addTag(Tag tag) async{
    showLoading();
    await _database.write(tagsCollection, data: tag.toJson(),path: tag.id);
    hideLoading();
+   Get.back();
  }
 
  Future<void> deleteTag(String tagID) async{
    showLoading();
    await _database.delete(tagsCollection, path: tagID);
    hideLoading();
+   Get.back();
  }
-
-
 
 
   void changeMouseIndex(int i) {
@@ -161,21 +150,6 @@ class HomeController extends GetxController {
     debugPrint("On Mouse Exist************");
     update();
   }
-
-  //BlueToothPrint Instance
-  //BluetoothPrint blueToothPrint = BluetoothPrint.instance;
-  //BlueToothDevice
-  //BluetoothDevice? blueToothDevice;
-
-  //Set Device and Connect
-  /* void setDeviceAndConnect(BluetoothDevice device) {
-    blueToothDevice = device;
-    if (!(blueToothDevice == null)) {
-      //We connect
-      blueToothPrint.connect(blueToothDevice!);
-    }
-    update();
-  }*/
 
   //Chage OwnBand
   void changeOwnBrandOrNot(bool value, bool isUpdate) {
@@ -215,43 +189,49 @@ class HomeController extends GetxController {
     bankSlipImage.value = image;
   }
 
-  void addToCart(ItemModel itemModel, String color, String size, int price,
-      String priceType) {
+  void addToCart(Product product,{ String? color, String? size}) {
+    debugPrint("********current user point inside addToCart: $currentUserPoint*******");
+    if(product.requirePoint! > 0 && isCanAdd(product.requirePoint!)){
+      currentUserPoint = currentUserPoint - (product.requirePoint! * 1);
+    }else if(product.requirePoint! > 0 && 
+    !isCanAdd(product.requirePoint!)){
+      showNotEnoughPoint();
+      return;
+    }
     try {
-      final PurchaseItem _item = myCart.firstWhere(
+      final PurchaseItem _item = myCart.firstWhere(//--if already exist--//
         (item) =>
-            item.id == itemModel.id &&
+            item.id == product.id &&
             item.color == color &&
-            item.size == size &&
-            item.price == price &&
-            item.priceType == priceType,
+            item.size == size,
       );
       myCart.value = myCart.map((element) {
         if (_item.id == element.id) {
           return PurchaseItem(
-            element.id,
-            element.itemName,
-            element.count + 1,
-            element.size,
-            element.color,
-            element.priceType,
-            element.isOwnBrand,
-            element.price,
-          );
+            id: element.id, 
+            itemName: element.itemName, 
+            count: element.count + 1, 
+            size: element.size, 
+            color: element.color, 
+            price: element.price,
+            );
         }
         return element;
       }).toList();
     } catch (e) {
-      myCart.add(PurchaseItem(
-        itemModel.id!,
-        itemModel.name,
-        1,
-        size,
-        color,
-        priceType,
-        itemModel.isOwnBrand,
-        price,
-      ));
+      myCartMap.putIfAbsent(product.id, () => 1);
+      myCart.add( //-----For new product that doesn't already exist before----//
+      PurchaseItem(
+            id: product.id, 
+            itemName: product.name, 
+            count: 1, 
+            size: size, 
+            color: color, 
+            price: product.price,
+            discountPrice: product.discountPrice,
+            requirePoint: product.requirePoint,
+            )
+      );
     }
   }
 
@@ -331,20 +311,17 @@ class HomeController extends GetxController {
   //int shipping() => myCart.isEmpty ? 0 : shippingFee;
 
   void addCount(PurchaseItem p) {
+    if(!isCanAdd(p.requirePoint!)){
+    }
+
     myCart.value = myCart.map((element) {
       if (element.id == p.id &&
           element.color == p.color &&
           element.size == p.size) {
-        return PurchaseItem(
-          element.id,
-          element.itemName,
-          element.count + 1,
-          element.size,
-          element.color,
-          element.priceType,
-          element.isOwnBrand,
-          element.price,
-        );
+            if(element.requirePoint! > 0){
+              currentUserPoint = currentUserPoint - (element.requirePoint! * 1);
+            }
+        return element.copyWith(count: element.count + 1);
       }
       return element;
     }).toList();
@@ -359,15 +336,10 @@ class HomeController extends GetxController {
           element.color == p.color &&
           element.size == p.size) {
         if (element.count > 1) {
-          return PurchaseItem(
-              element.id,
-              element.itemName,
-              element.count - 1,
-              element.size,
-              element.color,
-              element.priceType,
-              element.isOwnBrand,
-              element.price);
+          if(element.requirePoint! > 0){
+            currentUserPoint = currentUserPoint + (element.requirePoint! * 1);
+          }
+          return element.copyWith(count: element.count -1);
         }
         needToRemove = true;
         return element;
@@ -375,6 +347,7 @@ class HomeController extends GetxController {
       return element;
     }).toList();
     if (needToRemove) {
+      myCartMap.remove(p.id);
       myCart.removeWhere((element) =>
           element.id == p.id &&
           element.color == p.color &&
@@ -390,11 +363,11 @@ class HomeController extends GetxController {
     }
     int price = 0;
     for (var i = 0; i < myCart.length; i++) {
-      //print(items.firstWhere((element) => element.id == myCart[i].id).price);
-      debugPrint("**********each price:$i: ${myCart[i].price}");
-      /* price += items.firstWhere((element) => element.id == myCart[i].id).price *
-          myCart[i].count;*/
-      price += myCart[i].price * myCart[i].count;
+     if(myCart[i].discountPrice! > 0){ //-----for discount products----//
+         price += myCart[i].discountPrice! * myCart[i].count;
+     }else if(!(myCart[i].requirePoint! > 0)){//---for normal products----//
+         price += myCart[i].price * myCart[i].count;
+     }
     }
     subTotal = price;
     debugPrint("*************$subTotal");
@@ -466,19 +439,19 @@ class HomeController extends GetxController {
   final RxBool isLoading = false.obs;
 
   Future<void> proceedToPay() async {
-    if (isLoading.value) return;
-    isLoading.value = true;
-    Get.back();
+    showLoading();
+    final total = subTotal + townShipNameAndFee["fee"] as int;
     try {
       final list = getUserOrderData();
       final _purchase = PurchaseModel(
+        dateTime: DateTime.now().toString(),
+        id: Uuid().v1(),
         items: myCart
             .map((cart) =>
-                "${cart.id},${cart.itemName},${cart.color},${cart.size},${cart.count},${cart.price}")
-            .toList(),
+                cart).toList(),
         name: list[0],
         email: list[1],
-        phone: int.parse(list[2]),
+        phone: list[2],
         address: list[3],
         bankSlipImage: bankSlipImage.value.isEmpty ? null : bankSlipImage.value,
         deliveryTownshipInfo: [
@@ -486,12 +459,34 @@ class HomeController extends GetxController {
           townShipNameAndFee["fee"]
         ],
       );
+      final hivePurchase = HivePurchase(
+        id: Uuid().v1(),
+        items: _purchase.items
+                .map((e) => HivePurchaseItem(
+                      itemName: e.itemName,
+                      count: e.count,
+                      size: e.size,
+                      color: e.color,
+                      price: e.price,
+                      discountPrice: e.discountPrice,
+                      requirePoint: e.requirePoint,
+                    ))
+                .toList()
+            ,
+        totalPrice: total,
+        deliveryTownshipInfo: _purchase.deliveryTownshipInfo,
+        dateTime: DateTime.now(),
+      );
       await _database.writePurchaseData(_purchase).then((value) {
+        hideLoading();
+        Get.back();
         Get.snackbar("လူကြီးမင်း Order တင်ခြင်း", 'အောင်မြင်ပါသည်');
+        purchaseHiveBox.put(hivePurchase.id, hivePurchase);
       }); //submit success
       myCart.clear();
       navIndex.value = 0;
-      update([myCart, navIndex]);
+      update([myCart ,navIndex]);
+      myCart.clear();
     } catch (e) {
       Get.snackbar("လူကြီးမင်း Order တင်ခြင်း", 'မအောင်မြင်ပါ');
       print("proceed to pay error $e");
@@ -562,33 +557,33 @@ class HomeController extends GetxController {
     }
   }
 
-  Future<void> uploadProfile() async {
-    try {
-      final XFile? _file =
-          await _imagePicker.pickImage(source: ImageSource.gallery);
+  // Future<void> uploadProfile() async {
+  //   try {
+  //     final XFile? _file =
+  //         await _imagePicker.pickImage(source: ImageSource.gallery);
 
-      if (_file != null) {
-        await _api.uploadFile(
-          _file.path,
-          fileName: user.value.user?.uid,
-          folder: profileUrl,
-        );
-        await _database.write(
-          profileCollection,
-          data: {
-            'link': user.value.user?.uid,
-          },
-          path: user.value.user?.uid,
-        );
-        user.value.update(
-          newProfileImage: '$baseUrl$profileUrl${user.value.user?.uid}',
-        );
-        update([user]);
-      }
-    } catch (e) {
-      print("profile upload error $e");
-    }
-  }
+  //     if (_file != null) {
+  //       await _api.uploadFile(
+  //         _file.path,
+  //         fileName: user.value.user?.uid,
+  //         folder: profileUrl,
+  //       );
+  //       await _database.write(
+  //         profileCollection,
+  //         data: {
+  //           'link': user.value.user?.uid,
+  //         },
+  //         path: user.value.user?.uid,
+  //       );
+  //       user.value.update(
+  //         newProfileImage: '$baseUrl$profileUrl${user.value.user?.uid}',
+  //       );
+  //       update([user]);
+  //     }
+  //   } catch (e) {
+  //     print("profile upload error $e");
+  //   }
+  // }
 
   //Get User's Order Data
   List<String> getUserOrderData() {
@@ -618,10 +613,21 @@ class HomeController extends GetxController {
           .setStringList("userOrder", [name, email, phone, address]);
     }
   }
-
+ 
+ //Loading Font to not take time when user in App to this font
+  late ByteData oleoBold;
+  late ByteData oleoRegular;
+  late ByteData robotoLight;
+  late ByteData robotoBold;
+  late var image;
   @override
   void onInit() async {
     super.onInit();
+    oleoBold = await rootBundle.load("fonts/OleoScriptSwashCaps-Bold.ttf");
+    oleoRegular =
+        await rootBundle.load("fonts/OleoScriptSwashCaps-Regular.ttf");
+    robotoLight = await rootBundle.load("fonts/Roboto-Light.ttf");
+    robotoBold = await rootBundle.load("fonts/Roboto-Bold.ttf");
     sharedPref = await SharedPreferences.getInstance();
     if (getUserOrderData().isNotEmpty) {
       checkOutStep.value = 1;
@@ -632,38 +638,65 @@ class HomeController extends GetxController {
      
     });
 
-    ///
-    _auth.onAuthChange().listen((_) async {
-      user.value = AuthUser(user: _);
-      if (_ == null) {
-        authorized.value = false;
-      } else {
-        authorized.value = true;
-        await _database.write(
-          userCollection,
-          data: {
-            'uid': _.uid,
-            'phone': _.phoneNumber,
-          },
-          path: _.uid,
-        );
-        final DocumentSnapshot<Map<String, dynamic>> _data =
-            await _database.read(userCollection, path: _.uid);
-        user.value = user.value.update(
-          newIsAdmin: _data.exists,
-        );
-        final DocumentSnapshot<Map<String, dynamic>> _profile =
-            await _database.read(profileCollection, path: _.uid);
-        user.value = user.value.update(
-          newProfileImage: _profile.data()?['link'],
-        );
-        if (user.value.isAdmin) {
+    //-----------------------On Auth Change-------------------------------//
+    _auth.onAuthChange().listen((user) async {
+      if (user == null) {
+        currentUser.value = null;
+      }else {
+        if (!(user == null)) {
+          debugPrint("*******user is not null****");
+          //we need to check document reference is already defined
+          final snapshot = await FirebaseFirestore.instance
+              .collection(adminUserCollection)
+              .doc(user.uid)
+              .get();
+          if (!snapshot.exists) {
+            //If not define before
+            debugPrint("******Document is not exist so,we write to firebase"
+            "because this user is completely new user.");
+            currentUser.value = AuthUser(
+              id: user.uid,
+              emailAddress: user.phoneNumber!,
+              userName: user.displayName ?? "",
+              image: user.photoURL ?? "",
+              points: 0,
+            );
+            await _database.write(
+              adminUserCollection,
+              path: currentUser.value!.id,
+              data: currentUser.value!.toJson(),
+            );
+          }
+
+         //-----------we watch this current user's document-----------//
+          FirebaseFirestore.instance
+              .collection(adminUserCollection)
+              .doc(user.uid)
+              .snapshots()
+              .listen((event) {
+              debugPrint("****UserEvent: ${event.data()}");
+              currentUser.value = AuthUser.fromJson(event.data()!);
+              currentUserPoint = currentUser.value!.points;
+              debugPrint("************current user points: $currentUserPoint*********");
+          });
+        }
+        // final DocumentSnapshot<Map<String, dynamic>> _data =
+        //     await _database.read(userCollection, path: _.uid);
+        // user.value = user.value.update(
+        //   newIsAdmin: _data.exists,
+        // );
+        // final DocumentSnapshot<Map<String, dynamic>> _profile =
+        //     await _database.read(profileCollection, path: _.uid);
+        // user.value = user.value.update(
+        //   newProfileImage: _profile.data()?['link'],
+        // );
+        // if (user.value.isAdmin) {
           _database.watchOrder(purchaseCollection).listen((event) {
             if (event.docs.isEmpty) {
               _purchcases.clear();
             } else {
               _purchcases.value = event.docs
-                  .map((e) => PurchaseModel.fromJson(e.data(), e.id))
+                  .map((e) => PurchaseModel.fromJson(e.data()))
                   .toList();
             }
           });
@@ -696,7 +729,7 @@ class HomeController extends GetxController {
             }
           });
         }
-      }
+      //}
     });
 
     //Listen BlueTooth State
@@ -790,4 +823,46 @@ class HomeController extends GetxController {
       ),
     );
   }
+  //-------------For Reward----------------------//
+  
+  Future<void> signInWithGoogle(String redirectRouteUrl) async {
+    showLoading();
+    try {
+      // Trigger the authentication flow
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+      // Obtain the auth details from the request
+      final GoogleSignInAuthentication? googleAuth =
+          await googleUser?.authentication;
+
+      // Create a new credential
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
+
+      // Once signed in, return the UserCredential
+      await FirebaseAuth.instance.signInWithCredential(credential);
+      hideLoading();
+      Get.offNamed(redirectRouteUrl);
+    } catch (e) {
+      debugPrint("*******$e");
+      hideLoading();
+    }
+  }
+  int currentUserPoint = 0;
+
+  bool isCanAdd(int rewardPoint) {
+    return currentUserPoint > (rewardPoint * 1);
+  }
+  bool isContainRewardProductInCart(Product p){
+    bool result = false;
+    myCart.map((element){
+      if(element.id == p.id){
+        result = true;
+      }
+    });
+    return result;
+  }
+  //---------------------------------------------//
 }

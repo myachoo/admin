@@ -4,7 +4,7 @@ import 'package:hive/hive.dart';
 
 part 'hive_item.g.dart';
 
-@HiveType(typeId: 2)
+@HiveType(typeId: 3)
 class HiveItem {
   @HiveField(0)
   final String id;
@@ -23,9 +23,9 @@ class HiveItem {
   @HiveField(7)
   final int discountPrice;
   @HiveField(8)
-  final String size;
+   String? size;
   @HiveField(9)
-  final String color;
+   String? color;
   @HiveField(10)
   final int requirePoint;
   @HiveField(11)

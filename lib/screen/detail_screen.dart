@@ -9,6 +9,7 @@ import 'package:kozarni_ecome/data/constant.dart';
 import 'package:get/get.dart';
 import 'package:kozarni_ecome/expaned_widget.dart';
 import 'package:kozarni_ecome/model/hive_item.dart';
+import 'package:kozarni_ecome/routes/routes.dart';
 import 'home_screen.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
@@ -212,81 +213,84 @@ class DetailScreen extends StatelessWidget {
                 SizedBox(
                   height: 30,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      children: [
-                        Text(
-                          "⏰ Delivery Time",
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey,
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        children: [
+                          Text(
+                            "⏰ Delivery Time",
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey,
+                            ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          "Within 3 Days",
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
+                          SizedBox(
+                            height: 5,
                           ),
-                        )
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Text(
-                          "💁 Availability ",
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey,
+                          Text(
+                            "Within 3 Days",
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          )
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Text(
+                            "💁 Availability ",
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey,
+                            ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          "In Stock",
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
+                          SizedBox(
+                            height: 5,
                           ),
-                        )
-                      ],
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          "📞 Contact Phone ",
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey,
+                          Text(
+                            "In Stock",
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          )
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            "📞 Contact Phone ",
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey,
+                            ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          "     09 7777 0 222 8",
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
+                          SizedBox(
+                            height: 5,
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                          Text(
+                            "     09 7777 0 222 8",
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
                 SizedBox(height: 30),
                 Row(
@@ -398,13 +402,19 @@ class DetailScreen extends StatelessWidget {
         child: ElevatedButton(
           style: buttonStyle,
           onPressed: () {
-            Get.defaultDialog(
+            if((currentProduct.color == null) && (currentProduct.size == null)){
+              //------Add to Cart-------//
+              controller.addToCart(currentProduct);
+                Get.back();
+            }else{
+              Get.defaultDialog(
               titlePadding: EdgeInsets.all(0),
               contentPadding: EdgeInsets.only(left: 20, right: 20, bottom: 10),
               radius: 0,
               title: '',
-              content: Container(),
+              content: AddToCart(),
             );
+            }
           },
           child: Text("၀ယ်ယူရန်"),
         ),
@@ -432,7 +442,7 @@ class _AddToCartState extends State<AddToCart> {
     final currentProduct = controller.editItem.value;
     return Column(
       children: [
-        DropdownButtonFormField(
+        !(currentProduct?.color == null ) ?DropdownButtonFormField(
           value: colorValue,
           hint: Text(
             'Color',
@@ -441,7 +451,7 @@ class _AddToCartState extends State<AddToCart> {
           onChanged: (String? e) {
             colorValue = e;
           },
-          items: currentProduct?.color
+          items: currentProduct!.color!
               .split(',')
               .map((e) => DropdownMenuItem(
                     value: e,
@@ -451,11 +461,11 @@ class _AddToCartState extends State<AddToCart> {
                     ),
                   ))
               .toList(),
-        ),
+        ) : const SizedBox(),
         SizedBox(
           height: 10,
         ),
-        DropdownButtonFormField(
+        !(currentProduct?.size == null) ? DropdownButtonFormField(
           value: sizeValue,
           hint: Text(
             "Size",
@@ -465,7 +475,7 @@ class _AddToCartState extends State<AddToCart> {
             sizeValue = e;
           },
           items: currentProduct?.size
-              .split(',')
+              !.split(',')
               .map((e) => DropdownMenuItem(
                     value: e,
                     child: Text(
@@ -474,7 +484,7 @@ class _AddToCartState extends State<AddToCart> {
                     ),
                   ))
               .toList(),
-        ),
+        ) : const SizedBox(),
         //Price Wholesale (or) Retail
         SizedBox(
           height: 10,
@@ -485,11 +495,11 @@ class _AddToCartState extends State<AddToCart> {
           child: ElevatedButton(
             style: buttonStyle,
             onPressed: () {
-              if (colorValue != null &&
+              if (colorValue != null || 
                   sizeValue != null) {
-                // controller.addToCart(currentProduct, colorValue!,
-                //     sizeValue!, price, priceType!);
-                Get.to(HomeScreen());
+                 controller.addToCart(currentProduct!,color: colorValue,size:sizeValue);
+               Get.back();
+               Get.back();
               }
             },
             child: Text("၀ယ်ယူရန်"),

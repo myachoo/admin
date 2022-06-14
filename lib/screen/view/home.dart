@@ -7,6 +7,8 @@ import 'package:kozarni_ecome/data/mock.dart';
 import 'package:kozarni_ecome/model/view_all_model.dart';
 import 'package:kozarni_ecome/routes/routes.dart';
 import 'package:kozarni_ecome/widgets/home_category.dart';
+import 'package:kozarni_ecome/widgets/home_category_main.dart';
+import 'package:kozarni_ecome/widgets/home_pickup.dart';
 import 'package:kozarni_ecome/widgets/normal_product_widget.dart';
 import 'package:kozarni_ecome/widgets/reward_product_widget.dart';
 import 'package:shimmer/shimmer.dart';
@@ -22,42 +24,43 @@ class HomeView extends StatelessWidget {
       body: ListView(
                 children: [
                   //Category
-                  HomeCategory(),
+                  HomeCategoryMain(),
                   const SizedBox(height: 10,),
                   //Advertisement
-                  Obx(
-                    () {
-                      return controller.advertisementList.length > 0 ? AspectRatio(
-                        aspectRatio: 16/10,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          shrinkWrap: true,
-                          itemCount: controller.advertisementList.length,
-                          itemBuilder: (context,index){
-                            final advertisement = controller.advertisementList[index];
-                            return AspectRatio(
-                              aspectRatio: 16/10,
-                              child:  CachedNetworkImage(
-                                      progressIndicatorBuilder: (context, url, status) {
-                        return Shimmer.fromColors(
-                          baseColor: Colors.red,
-                          highlightColor: Colors.yellow,
-                          child: Container(color: Colors.white,),
-                        );
-                                      },
-                                      errorWidget: (context, url, whatever) {
-                        return const Text("Image not available");
-                                      },
-                                      imageUrl:
-                          advertisement.image,
-                                      fit: BoxFit.cover,
-                                    ),
-                              );
-                          },
-                          ),
-                      ) : const SizedBox();
-                    }
-                  ),
+                  HomePickUp(),
+                  // Obx(
+                  //   () {
+                  //     return controller.advertisementList.length > 0 ? AspectRatio(
+                  //       aspectRatio: 16/10,
+                  //       child: ListView.builder(
+                  //         scrollDirection: Axis.horizontal,
+                  //         shrinkWrap: true,
+                  //         itemCount: controller.advertisementList.length,
+                  //         itemBuilder: (context,index){
+                  //           final advertisement = controller.advertisementList[index];
+                  //           return AspectRatio(
+                  //             aspectRatio: 16/10,
+                  //             child:  CachedNetworkImage(
+                  //                     progressIndicatorBuilder: (context, url, status) {
+                  //       return Shimmer.fromColors(
+                  //         baseColor: Colors.red,
+                  //         highlightColor: Colors.yellow,
+                  //         child: Container(color: Colors.white,),
+                  //       );
+                  //                     },
+                  //                     errorWidget: (context, url, whatever) {
+                  //       return const Text("Image not available");
+                  //                     },
+                  //                     imageUrl:
+                  //         advertisement.image,
+                  //                     fit: BoxFit.cover,
+                  //                   ),
+                  //             );
+                  //         },
+                  //         ),
+                  //     ) : const SizedBox();
+                  //   }
+                  // ),
                    Obx(
                      () {
                        return controller.statusList.length > 1 ? ListView.builder(
@@ -208,7 +211,6 @@ class HomeView extends StatelessWidget {
                           ) : const SizedBox();
                      }
                    ),
-                    
                 //const SizedBox(height: 100,),    
                 ],
               ),

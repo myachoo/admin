@@ -15,8 +15,10 @@ class Product with _$Product{
   required int price,
   @JsonKey(defaultValue: 0)
   int? discountPrice,
-  required String size,
-  required String color,
+  @JsonKey(nullable: true)
+   String? size,
+   @JsonKey(nullable: true)
+   String? color,
   @JsonKey(defaultValue: 0)
   int? requirePoint,
   @JsonKey(nullable: true)

@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:kozarni_ecome/controller/home_controller.dart';
 import 'package:kozarni_ecome/controller/upload_controller.dart';
 import 'package:kozarni_ecome/data/constant.dart';
-import 'package:kozarni_ecome/model/item.dart';
 import 'package:kozarni_ecome/widgets/home_category.dart';
 import 'package:kozarni_ecome/widgets/status_button_list.dart';
 import 'package:kozarni_ecome/widgets/tag_button_list.dart';
@@ -19,7 +17,7 @@ class UploadItem extends StatefulWidget {
 class _UploadItemState extends State<UploadItem> {
   final UploadController controller = Get.find();
   final HomeController homecontroller = Get.find();
-
+  
   @override
   void dispose() {
     homecontroller.setEditItem(null);
@@ -32,25 +30,25 @@ class _UploadItemState extends State<UploadItem> {
       backgroundColor: scaffoldBackground,
       appBar: AppBar(
         title: Text(
-          "𝐂𝐢𝐧𝐝𝐲 Branded Export Fashion",
+          "DELUX BEAUTI",
           style: TextStyle(color: Colors.black, fontSize: 14)),
         actions: [
-          if (!(homecontroller.editItem.value == null)) ...[
-            Padding(
-              padding: const EdgeInsets.only(
-                top: 12.0,
-                bottom: 12.0,
-              ),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  primary: homeIndicatorColor,
-                ),
-                child: Text("Delete"),
-                onPressed: () =>
-                    controller.delete(homecontroller.editItem.value!.id),
-              ),
-            ),
-          ],
+          // if (!(homecontroller.editItem.value == null)) ...[
+          //   Padding(
+          //     padding: const EdgeInsets.only(
+          //       top: 12.0,
+          //       bottom: 12.0,
+          //     ),
+          //     child: ElevatedButton(
+          //       style: ElevatedButton.styleFrom(
+          //         primary: homeIndicatorColor,
+          //       ),
+          //       child: Text("Delete"),
+          //       onPressed: () =>
+          //           controller.delete(homecontroller.editItem.value!.id),
+          //     ),
+          //   ),
+          // ],
           Padding(
             padding: const EdgeInsets.all(12.0),
             child: ElevatedButton(
@@ -241,7 +239,7 @@ class _UploadItemState extends State<UploadItem> {
               ),
               child: TextFormField(
                 controller: controller.colorController,
-                validator: (value) => controller.validator(value: value,isOptional: false),
+                validator: (value) => controller.validator(value: value,isOptional: true),
                 decoration: InputDecoration(
                   hintText: 'အရောင်',
                   border: OutlineInputBorder(),
@@ -257,7 +255,7 @@ class _UploadItemState extends State<UploadItem> {
               ),
               child: TextFormField(
                 controller: controller.sizeController,
-                validator: (value) => controller.validator(value: value,isOptional: false),
+                validator: (value) => controller.validator(value: value,isOptional: true),
                 decoration: InputDecoration(
                   hintText: 'အရွယ်အစား',
                   border: OutlineInputBorder(),
@@ -290,7 +288,7 @@ class _UploadItemState extends State<UploadItem> {
               ),
               child: TextFormField(
                 controller: controller.deliveryTimeController,
-                validator: (value) => controller.validator(value: value,isOptional: false),
+                validator: (value) => controller.validator(value: value,isOptional: true),
                 decoration: InputDecoration(
                   hintText: 'Delivery Time',
                   border: OutlineInputBorder(),
