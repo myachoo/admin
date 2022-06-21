@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:kozarni_ecome/controller/home_controller.dart';
 import 'package:kozarni_ecome/controller/upload_controller.dart';
 import 'package:kozarni_ecome/data/constant.dart';
+import 'package:kozarni_ecome/widgets/animate_size_list/animate_size_list.dart';
 import 'package:kozarni_ecome/widgets/home_category.dart';
 import 'package:kozarni_ecome/widgets/status_button_list.dart';
 import 'package:kozarni_ecome/widgets/tag_button_list.dart';
+
+import '../widgets/animate_size_list/sizeprice_item.dart';
 
 class UploadItem extends StatefulWidget {
   const UploadItem({Key? key}) : super(key: key);
@@ -174,6 +178,22 @@ class _UploadItemState extends State<UploadItem> {
                 ),
               ),
             ),
+            //BrandName 
+            Padding(
+              padding: EdgeInsets.only(
+                top: 20,
+                left: 20,
+                right: 20,
+              ),
+              child: TextFormField(
+                controller: controller.brandNameController,
+                validator: (value) => controller.validator(value: value,isOptional: false),
+                decoration: InputDecoration(
+                  hintText: 'Brand အမည်',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ),
             //Description
             Padding(
               padding: EdgeInsets.only(
@@ -246,22 +266,40 @@ class _UploadItemState extends State<UploadItem> {
                 ),
               ),
             ),
-            //Size
+            //Add SizePrice Button
             Padding(
               padding: EdgeInsets.only(
                 top: 20,
                 left: 20,
                 right: 20,
               ),
-              child: TextFormField(
-                controller: controller.sizeController,
-                validator: (value) => controller.validator(value: value,isOptional: true),
-                decoration: InputDecoration(
-                  hintText: 'အရွယ်အစား',
-                  border: OutlineInputBorder(),
-                ),
-              ),
+              child: Obx(() {
+                return Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                      color: controller.isEmptySizePrice.value
+                          ? Colors.red
+                          : Colors.white,
+                    )),
+                    height: 50,
+                    width: 100,
+                    child: Row(children: [
+                      //Add Icon
+                      IconButton(
+                        onPressed: () => controller.addSizePrice(
+                        ),
+                        icon: Icon(FontAwesomeIcons.plusCircle,
+                            color: Colors.black),
+                      ),
+                      //Text
+                      Text("Add Size"),
+                    ]));
+              }),
             ),
+            //SizePrice Widget if list is not empty
+            Obx(() => controller.sizePriceMap.isNotEmpty
+                ? sizePriceListWidget()
+                : const SizedBox(height: 0)),
             //Reward Point
              Padding(
               padding: EdgeInsets.only(
@@ -297,5 +335,28 @@ class _UploadItemState extends State<UploadItem> {
             ),
           ],
     )));
+  }
+
+  Widget sizePriceListWidget() {
+    return Obx(() {
+      return AnimatedContainer(
+          height: (controller.sizePriceMap.length * 50) + 100,
+          curve: Curves.easeInOut,
+          duration: const Duration(milliseconds: 600),
+          padding: const EdgeInsets.only(
+            left: 20,
+            right: 20,
+          ),
+          child: ListView(
+            children: controller.sizePriceMap.entries.map((map) {
+              return SizePriceItemWidget(
+                key: ValueKey(map.key),
+                id: map.key,
+                sizeText: map.value.size,
+                price: "${map.value.price}",
+              );
+            }).toList(),
+          ));
+    });
   }
 }

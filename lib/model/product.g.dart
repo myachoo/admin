@@ -12,10 +12,14 @@ _$_Product _$$_ProductFromJson(Map<String, dynamic> json) => _$_Product(
       photo2: json['photo2'] as String,
       photo3: json['photo3'] as String,
       name: json['name'] as String,
+      brandName: json['brandName'] as String? ?? '',
       description: json['description'] as String,
       price: json['price'] as int,
       discountPrice: json['discountPrice'] as int? ?? 0,
-      size: json['size'] as String?,
+      size: (json['size'] as List<dynamic>?)
+              ?.map((e) => Size.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
       color: json['color'] as String?,
       requirePoint: json['requirePoint'] as int? ?? 0,
       advertisementID: json['advertisementID'] as String?,
@@ -38,10 +42,11 @@ Map<String, dynamic> _$$_ProductToJson(_$_Product instance) =>
       'photo2': instance.photo2,
       'photo3': instance.photo3,
       'name': instance.name,
+      'brandName': instance.brandName,
       'description': instance.description,
       'price': instance.price,
       'discountPrice': instance.discountPrice,
-      'size': instance.size,
+      'size': instance.size?.map((e) => e.toJson()).toList(),
       'color': instance.color,
       'requirePoint': instance.requirePoint,
       'advertisementID': instance.advertisementID,

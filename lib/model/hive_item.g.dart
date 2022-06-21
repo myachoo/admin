@@ -8,7 +8,7 @@ part of 'hive_item.dart';
 
 class HiveItemAdapter extends TypeAdapter<HiveItem> {
   @override
-  final int typeId = 3;
+  final int typeId = 8;
 
   @override
   HiveItem read(BinaryReader reader) {
@@ -36,13 +36,14 @@ class HiveItemAdapter extends TypeAdapter<HiveItem> {
       dateTime: fields[15] as DateTime,
       deliveryTime: fields[16] as String?,
       love: fields[17] as int,
+      brandName: fields[19] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, HiveItem obj) {
     writer
-      ..writeByte(19)
+      ..writeByte(20)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -80,7 +81,9 @@ class HiveItemAdapter extends TypeAdapter<HiveItem> {
       ..writeByte(17)
       ..write(obj.love)
       ..writeByte(18)
-      ..write(obj.comment);
+      ..write(obj.comment)
+      ..writeByte(19)
+      ..write(obj.brandName);
   }
 
   @override

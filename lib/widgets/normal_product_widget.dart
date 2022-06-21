@@ -20,7 +20,7 @@ class NormalProductWidget extends StatelessWidget {
       },
       child: ConstrainedBox(
                   constraints: BoxConstraints(
-                   
+                  maxHeight: 200,
                   ),
         child:  Card(
                    elevation: 5,
@@ -55,31 +55,50 @@ class NormalProductWidget extends StatelessWidget {
                                           child: Column(
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
-                                                  Padding(
-                                                    padding: const EdgeInsets.all(5),
-                                                    child: Text(
-                                                      product.name,
-                                                      maxLines: 1,
-                                                      overflow: TextOverflow.ellipsis,
-                                                      style: TextStyle(
-                                                        fontSize: 14,
-                                                        fontWeight: FontWeight.bold,
+                                                  product.brandName!.isNotEmpty ? 
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(5),
+                                      child: Text(
+                                        product.brandName ?? '',
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ): const SizedBox(),
+                                                  Expanded(
+                                                    child: Padding(
+                                                      padding: const EdgeInsets.all(5),
+                                                      child: Text(
+                                                        product.name,
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow.ellipsis,
+                                                        style: TextStyle(
+                                                          fontSize: 14,
+                                                          fontWeight: FontWeight.normal,
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
-                                                  Padding(
-                                                    padding: const EdgeInsets.only(
-                                                      left: 5,
-                                                      right: 5,
-                                                      bottom: 10,
-                                                      top: 2,
-                                                    ),
-                                                    child: Text(
-                                                       "${product.price} Kyats",
-                                                      style: TextStyle(
-                                                        fontSize: 14,
-                                                        fontWeight: FontWeight.bold,
-                                                        color: Colors.black,
+                                                  Expanded(
+                                                    child: Padding(
+                                                      padding: const EdgeInsets.only(
+                                                        left: 5,
+                                                        right: 5,
+                                                        bottom: 10,
+                                                        top: 2,
+                                                      ),
+                                                      child: Text(
+                                                         "${product.price} Kyats",
+                                                        style: TextStyle(
+                                                          fontSize: 14,
+                                                          fontWeight: FontWeight.bold,
+                                                          color: Colors.black,
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
@@ -101,6 +120,7 @@ class NormalProductWidget extends StatelessWidget {
                                   maxWidth: 150,
                                 ),
                                 child: ListView.separated(
+                                  physics: NeverScrollableScrollPhysics(),
                                   separatorBuilder: (context,index){
                                     return const SizedBox(height: 2,);
                                   },

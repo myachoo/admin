@@ -16,7 +16,7 @@ class _BlueToothPrintScreenState extends State<BlueToothPrintScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance?.addPostFrameCallback((_) => {initPrinter()});
+    WidgetsBinding.instance.addPostFrameCallback((_) => {initPrinter()});
   }
 
   @override

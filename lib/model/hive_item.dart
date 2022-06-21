@@ -4,7 +4,7 @@ import 'package:hive/hive.dart';
 
 part 'hive_item.g.dart';
 
-@HiveType(typeId: 3)
+@HiveType(typeId: 8)
 class HiveItem {
   @HiveField(0)
   final String id;
@@ -44,6 +44,8 @@ class HiveItem {
   final int love;
   @HiveField(18)
   final List<String> comment;
+  @HiveField(19)
+  final String brandName;
   HiveItem({
     required this.id,
     required this.name,
@@ -64,5 +66,6 @@ class HiveItem {
     required this.dateTime,
     required this.deliveryTime,
     required this.love,
+    required this.brandName,
   });
 }

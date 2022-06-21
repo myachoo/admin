@@ -189,7 +189,7 @@ void setViewAllProducts(ViewAllModel value){
     bankSlipImage.value = image;
   }
 
-  void addToCart(Product product,{ String? color, String? size}) {
+  void addToCart(Product product,{ String? color, List<String>? size,required int price}) {
     debugPrint("********current user point inside addToCart: $currentUserPoint*******");
     if(product.requirePoint! > 0 && isCanAdd(product.requirePoint!)){
       currentUserPoint = currentUserPoint - (product.requirePoint! * 1);
@@ -203,17 +203,12 @@ void setViewAllProducts(ViewAllModel value){
         (item) =>
             item.id == product.id &&
             item.color == color &&
-            item.size == size,
+            item.size == size?[0],
       );
       myCart.value = myCart.map((element) {
         if (_item.id == element.id) {
-          return PurchaseItem(
-            id: element.id, 
-            itemName: element.itemName, 
-            count: element.count + 1, 
-            size: element.size, 
-            color: element.color, 
-            price: element.price,
+          return _item.copyWith(
+            count: element.count + 1,
             );
         }
         return element;
@@ -225,9 +220,9 @@ void setViewAllProducts(ViewAllModel value){
             id: product.id, 
             itemName: product.name, 
             count: 1, 
-            size: size, 
+            size: size?[0], 
             color: color, 
-            price: product.price,
+            price: price,
             discountPrice: product.discountPrice,
             requirePoint: product.requirePoint,
             )
@@ -386,7 +381,7 @@ void setViewAllProducts(ViewAllModel value){
       name: model.name, 
       description: model.description, 
       price: model.price, 
-      size: model.size, 
+      size: "", 
       color: model.color, 
       status: model.status, 
       category: model.category, 
@@ -398,6 +393,7 @@ void setViewAllProducts(ViewAllModel value){
       deliveryTime: model.deliveryTime,
       requirePoint: model.requirePoint ?? 0,
       advertisementID: model.advertisementID,
+      brandName: model.brandName ?? "",
       );
   }
 
@@ -411,7 +407,7 @@ void setViewAllProducts(ViewAllModel value){
       name: model.name, 
       description: model.description, 
       price: model.price, 
-      size: model.size, 
+      size: items.where((p) => p.id == model.id).first.size, 
       color: model.color, 
       status: model.status, 
       category: model.category, 
@@ -423,6 +419,7 @@ void setViewAllProducts(ViewAllModel value){
       deliveryTime: model.deliveryTime,
       requirePoint: model.requirePoint,
       advertisementID: model.advertisementID,
+      brandName: model.brandName,
       );
   }
 
@@ -638,6 +635,44 @@ void setViewAllProducts(ViewAllModel value){
      
     });
 
+     _database.watchOrder(purchaseCollection).listen((event) {
+            if (event.docs.isEmpty) {
+              _purchcases.clear();
+            } else {
+              _purchcases.value = event.docs
+                  .map((e) => PurchaseModel.fromJson(e.data()))
+                  .toList();
+            }
+          });
+          _database.watch(advertisementCollection).listen((event) {
+            if(event.docs.isEmpty){
+              advertisementList.clear();
+            }else{
+              advertisementList.value = event.docs.map((e) => Advertisement.fromJson(e.data())).toList();
+            }
+          });
+          _database.watch(statusCollection).listen((event) {
+            if(event.docs.isEmpty){
+              statusList.clear();
+            }else{
+              statusList.value = event.docs.map((e) => Status.fromJson(e.data())).toList();
+            }
+          });
+          _database.watch(categoryCollection).listen((event) {
+            if(event.docs.isEmpty){
+              categories.clear();
+            }else{
+              categories.value = event.docs.map((e) => Cate.Category.fromJson(e.data())).toList();
+            }
+          });
+          _database.watch(tagsCollection).listen((event) {
+            if(event.docs.isEmpty){
+              tagsList.clear();
+            }else{
+              tagsList.value = event.docs.map((e) => Tag.fromJson(e.data())).toList();
+            }
+          });
+
     //-----------------------On Auth Change-------------------------------//
     _auth.onAuthChange().listen((user) async {
       if (user == null) {
@@ -691,43 +726,6 @@ void setViewAllProducts(ViewAllModel value){
         //   newProfileImage: _profile.data()?['link'],
         // );
         // if (user.value.isAdmin) {
-          _database.watchOrder(purchaseCollection).listen((event) {
-            if (event.docs.isEmpty) {
-              _purchcases.clear();
-            } else {
-              _purchcases.value = event.docs
-                  .map((e) => PurchaseModel.fromJson(e.data()))
-                  .toList();
-            }
-          });
-          _database.watch(advertisementCollection).listen((event) {
-            if(event.docs.isEmpty){
-              advertisementList.clear();
-            }else{
-              advertisementList.value = event.docs.map((e) => Advertisement.fromJson(e.data())).toList();
-            }
-          });
-          _database.watch(statusCollection).listen((event) {
-            if(event.docs.isEmpty){
-              statusList.clear();
-            }else{
-              statusList.value = event.docs.map((e) => Status.fromJson(e.data())).toList();
-            }
-          });
-          _database.watch(categoryCollection).listen((event) {
-            if(event.docs.isEmpty){
-              categories.clear();
-            }else{
-              categories.value = event.docs.map((e) => Cate.Category.fromJson(e.data())).toList();
-            }
-          });
-          _database.watch(tagsCollection).listen((event) {
-            if(event.docs.isEmpty){
-              tagsList.clear();
-            }else{
-              tagsList.value = event.docs.map((e) => Tag.fromJson(e.data())).toList();
-            }
-          });
         }
       //}
     });

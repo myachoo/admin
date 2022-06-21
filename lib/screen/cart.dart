@@ -305,6 +305,7 @@ class CartView extends StatelessWidget {
 
   Widget divisionDialogWidget() {
     return Material(
+      type: MaterialType.transparency,
       child: Align(
         alignment: Alignment.center,
         child: GetBuilder<HomeController>(builder: (controller) {

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:kozarni_ecome/controller/home_controller.dart';
 import 'package:kozarni_ecome/data/constant.dart';
+import 'package:kozarni_ecome/model/size.dart';
 import 'package:kozarni_ecome/service/api.dart';
 import 'package:kozarni_ecome/service/database.dart';
 import 'package:kozarni_ecome/widgets/show_loading/show_loading.dart';
@@ -11,6 +12,8 @@ import 'package:uuid/uuid.dart';
 import '../model/product.dart';
 
 class UploadController extends GetxController {
+   var isEmptySizePrice = false.obs;
+  var isEmptyDiscountPercentage = false.obs;
   final RxBool isUploading = false.obs;
   final HomeController _homeController = Get.find();
   final RxMap<String,String> tagsMap = <String,String>{}.obs;
@@ -26,10 +29,14 @@ class UploadController extends GetxController {
   TextEditingController discountPriceController = TextEditingController();
   TextEditingController requirePointController = TextEditingController();
   TextEditingController deliveryTimeController = TextEditingController();
+  TextEditingController brandNameController = TextEditingController();
 
   String advertisementID = "";
   var status = "".obs;
   /**************************** */
+
+  String? sizeValidator(String? data) => data?.isEmpty == true ? 'empty' : null;
+
 
   void changeStatus(String value){
     status.value = value;
@@ -56,9 +63,14 @@ class UploadController extends GetxController {
      photo3Controller.text = editItem.photo3;
      nameController.text = editItem.name;
      descriptionController.text = editItem.description;
-     sizeController.text = editItem.size ?? "";
+     sizePriceMap.value = Map<String,Size>.fromIterable(
+        _homeController.editItem.value!.size!,
+        key: (element) => element.id,
+        value: (element) => element,
+      );
      colorController.text = editItem.color ?? "";
      priceController.text = editItem.price.toString();
+     brandNameController.text = editItem.brandName ?? "";
      discountPriceController.text = editItem.discountPrice.toString();
      requirePointController.text = editItem.requirePoint.toString();
      advertisementID = editItem.advertisementID ?? "";
@@ -78,8 +90,34 @@ class UploadController extends GetxController {
   final ImagePicker _imagePicker = ImagePicker();
 
   final RxString filePath = ''.obs;
-
+  final GlobalKey<AnimatedListState> animateListkey = GlobalKey();
   final GlobalKey<FormState> form = GlobalKey();
+   RxMap<String, Size> sizePriceMap = <String, Size>{}.obs;
+   //RxList<Size> sizePriceList = <Size>[].obs;
+
+  int sizeIndex = 0; 
+  
+  //Add SIZEPRICE object into List
+  void addSizePrice() {
+    final obj = Size.empty();
+    sizePriceMap.putIfAbsent(obj.id, () => obj);
+  }
+
+  //Change SizePrice's sizeText
+  void changeSizePriceText(String value, String id) {
+    sizePriceMap[id] = sizePriceMap[id]!.copyWith(size: value);
+  }
+
+  //Change SizePrice's price
+  void changeSizePricePrice(String value, String id) {
+    sizePriceMap[id] =
+        sizePriceMap[id]!.copyWith(price: value.isEmpty ? "0" : value);
+  }
+
+  //Delete SizePrice
+  void deleteSizePrice(String id) {
+    sizePriceMap.remove(id);
+  }
  
 
   Future<void> pickImage() async {
@@ -123,7 +161,6 @@ class UploadController extends GetxController {
   }
 
   Future<void> upload() async {
-    debugPrint("*******EditItemID: ${_homeController.editItem.value!.id}");
     showLoading();
     try {
       if (form.currentState?.validate() == true
@@ -142,7 +179,7 @@ class UploadController extends GetxController {
                   photo3: photo3Controller.text,
                   name: nameController.text,
                   description: descriptionController.text,
-                  size: sizeController.text,
+                  size: sizePriceMap.entries.map((e) => e.value).toList(),
                   color: colorController.text,
                   price: int.parse(priceController.text),
                   discountPrice: int.tryParse(discountPriceController.text),
@@ -150,7 +187,8 @@ class UploadController extends GetxController {
                   advertisementID: advertisementID,
                   status: status.value,
                   category: _homeController.category.value,
-                  tags: tagsMap.values.map((e) => e).toList()
+                  tags: tagsMap.values.map((e) => e).toList(),
+                  brandName: brandNameController.text,
                 )
                 .toJson(),
           );
@@ -166,7 +204,7 @@ class UploadController extends GetxController {
                   photo3: photo3Controller.text,
                   name: nameController.text,
                   description: descriptionController.text,
-                  size: sizeController.text,
+                  size: sizePriceMap.entries.map((e) => e.value).toList(),
                   color: colorController.text,
                   price: int.parse(priceController.text),
                   discountPrice: int.tryParse(discountPriceController.text),
@@ -175,6 +213,7 @@ class UploadController extends GetxController {
                   status: status.value,
                   category: _homeController.category.value,
                   tags: tagsMap.values.map((e) => e).toList(),
+                  brandName: brandNameController.text,
                   dateTime: DateTime.now(),
             ).toJson(),
           );

@@ -22,6 +22,8 @@ class HomeView extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       body: ListView(
+        shrinkWrap: true,
+        physics: BouncingScrollPhysics(),
                 children: [
                   //Category
                   HomeCategoryMain(),
@@ -77,7 +79,7 @@ class HomeView extends StatelessWidget {
                                   //we check first product's require point is greather than 0 then this is reward list,
                                   //or not.
                                 //OTHER WIDGET 
-                                return AspectRatio(aspectRatio: 16/10,
+                                return AspectRatio(aspectRatio: 16/13,
                                 child: Padding(
                                   padding: const EdgeInsets.only(
                                     
@@ -128,7 +130,8 @@ class HomeView extends StatelessWidget {
                                         ),
                                       ),
                                       Expanded(
-                                        child: ListView.builder(
+                                                                                child: ListView.builder(
+                                                                                  physics: BouncingScrollPhysics(),
                                           scrollDirection: Axis.horizontal,
                                           shrinkWrap: true,
                                           itemCount: products.length,
@@ -191,6 +194,7 @@ class HomeView extends StatelessWidget {
                                       ),
                                       Expanded(
                                         child: ListView.builder(
+                                          physics: BouncingScrollPhysics(),
                                           scrollDirection: Axis.horizontal,
                                           shrinkWrap: true,
                                           itemCount: products.length,

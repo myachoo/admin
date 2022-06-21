@@ -81,7 +81,22 @@ class _ManageItemState extends State<ManageItem> {
                 itemCount: homeController.isSearch.value
                     ? homeController.searchitems.length
                     : homeController.items.length,
-                itemBuilder: (_, i) => SwipeActionCell(
+                itemBuilder: (_, i) {
+                  String size = "";
+                  List<String>? sizeListString = homeController.isSearch.value ?
+                  homeController.searchitems[i].size?.map((e) => e.size).toList() :
+                  homeController.items[i].size?.map((e) => e.size).toList();
+                  if(!(sizeListString == null) && sizeListString.isNotEmpty){
+                    for (var item in sizeListString){
+                      size += ",$item";
+                    }
+                  }
+                  String color = homeController.isSearch.value
+                                      ? homeController.searchitems[i].color ?? ""
+                                      : homeController
+                                          .items[i].color
+                                          ?? "";
+                  return SwipeActionCell(
                   key: ValueKey(homeController.isSearch.value
                       ? homeController.searchitems.length
                       : homeController.items[i].id),
@@ -147,26 +162,19 @@ class _ManageItemState extends State<ManageItem> {
                                 SizedBox(
                                   height: 5,
                                 ),
-                                Text(
-                                  homeController.isSearch.value
-                                      ? homeController.searchitems[i].color ?? ""
-                                      : homeController
-                                          .items[i].color
-                                          ?? "",
+                              color.isNotEmpty ?  Text(
+                                  color,
                                   style: TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w400,
                                     wordSpacing: 1,
                                   ),
-                                ),
-                                SizedBox(
+                                ) : const SizedBox(),
+                                color.isNotEmpty ? SizedBox(
                                   height: 5,
-                                ),
-                                Text(
-                                  homeController.isSearch.value
-                                      ? homeController.searchitems[i].size ?? ""
-                                      : homeController
-                                          .items[i].size ?? "",
+                                ) : const SizedBox(),
+                               size.isNotEmpty ? Text(
+                                  size,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
@@ -174,10 +182,10 @@ class _ManageItemState extends State<ManageItem> {
                                     fontWeight: FontWeight.w400,
                                     wordSpacing: 1,
                                   ),
-                                ),
-                                SizedBox(
+                                ) : const SizedBox(),
+                               size.isNotEmpty ? SizedBox(
                                   height: 5,
-                                ),
+                                ) : const SizedBox(),
                                 Text(
                                   "${homeController.isSearch.value ? homeController.searchitems[i].price : homeController.items[i].price}Ks",
                                   style: TextStyle(
@@ -193,7 +201,8 @@ class _ManageItemState extends State<ManageItem> {
                       ),
                     ),
                   ),
-                ),
+                );
+                }
               ),
             ),
           )

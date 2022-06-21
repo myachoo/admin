@@ -96,17 +96,20 @@ class CardWidget extends StatelessWidget {
                   padding: const EdgeInsets.all(0.0),
                   child: Column(
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(left: 20, top: 20),
-                            child: Text(
-                              cate.name,
-                              style: TextStyle(color: Colors.black, fontSize: 20),
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 20, top: 20),
+                              child: Text(
+                                cate.name,
+                                style: TextStyle(color: Colors.black, fontSize: 20),
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                       Container(
                           alignment: Alignment.bottomRight,

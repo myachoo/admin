@@ -55,6 +55,19 @@ class ViewAllRewardProductWidget extends StatelessWidget {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
+                                  product.brandName!.isNotEmpty ? 
+                                  Padding(
+                                    padding: const EdgeInsets.all(5),
+                                    child: Text(
+                                      product.brandName ?? '',
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ): const SizedBox(),
                                   Padding(
                                     padding: const EdgeInsets.all(5),
                                     child: Text(
@@ -63,7 +76,7 @@ class ViewAllRewardProductWidget extends StatelessWidget {
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
                                         fontSize: 14,
-                                        fontWeight: FontWeight.bold,
+                                        fontWeight: FontWeight.normal,
                                       ),
                                     ),
                                   ),
@@ -119,7 +132,7 @@ class ViewAllRewardProductWidget extends StatelessWidget {
                                               debugPrint(
                                                   "*****Add to cart reward product**");
 
-                                              _homeController.addToCart(product);
+                                              _homeController.addToCart(product,price: product.price);
                                             }
                                           },
                                           child: (_homeController

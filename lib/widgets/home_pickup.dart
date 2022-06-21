@@ -14,6 +14,7 @@ class HomePickUp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
     final HomeController controller = Get.find();
     return controller.advertisementList.isEmpty
         ? const SizedBox()
@@ -22,6 +23,7 @@ class HomePickUp extends StatelessWidget {
               bottom: 10,
             ),
             child: GFCarousel(
+              scrollPhysics: const BouncingScrollPhysics(),
               aspectRatio: 16 / 9,
               autoPlay: true,
               viewportFraction: 1.0,
@@ -48,7 +50,9 @@ class HomePickUp extends StatelessWidget {
                               return const Text("Image not available");
                             },
                             imageUrl: advertisement.image,
-                            fit: BoxFit.fitHeight,
+                            fit: BoxFit.fill,
+                            height: 200,
+                            width: width,
                           ),
                     ),
                         //Shop Button

@@ -25,12 +25,14 @@ mixin _$Product {
   String get photo2 => throw _privateConstructorUsedError;
   String get photo3 => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
+  @JsonKey(nullable: true, defaultValue: "")
+  String? get brandName => throw _privateConstructorUsedError;
   String get description => throw _privateConstructorUsedError;
   int get price => throw _privateConstructorUsedError;
   @JsonKey(defaultValue: 0)
   int? get discountPrice => throw _privateConstructorUsedError;
-  @JsonKey(nullable: true)
-  String? get size => throw _privateConstructorUsedError;
+  @JsonKey(nullable: true, defaultValue: [])
+  List<Size>? get size => throw _privateConstructorUsedError;
   @JsonKey(nullable: true)
   String? get color => throw _privateConstructorUsedError;
   @JsonKey(defaultValue: 0)
@@ -63,10 +65,11 @@ abstract class $ProductCopyWith<$Res> {
       String photo2,
       String photo3,
       String name,
+      @JsonKey(nullable: true, defaultValue: "") String? brandName,
       String description,
       int price,
       @JsonKey(defaultValue: 0) int? discountPrice,
-      @JsonKey(nullable: true) String? size,
+      @JsonKey(nullable: true, defaultValue: []) List<Size>? size,
       @JsonKey(nullable: true) String? color,
       @JsonKey(defaultValue: 0) int? requirePoint,
       @JsonKey(nullable: true) String? advertisementID,
@@ -94,6 +97,7 @@ class _$ProductCopyWithImpl<$Res> implements $ProductCopyWith<$Res> {
     Object? photo2 = freezed,
     Object? photo3 = freezed,
     Object? name = freezed,
+    Object? brandName = freezed,
     Object? description = freezed,
     Object? price = freezed,
     Object? discountPrice = freezed,
@@ -130,6 +134,10 @@ class _$ProductCopyWithImpl<$Res> implements $ProductCopyWith<$Res> {
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
+      brandName: brandName == freezed
+          ? _value.brandName
+          : brandName // ignore: cast_nullable_to_non_nullable
+              as String?,
       description: description == freezed
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
@@ -145,7 +153,7 @@ class _$ProductCopyWithImpl<$Res> implements $ProductCopyWith<$Res> {
       size: size == freezed
           ? _value.size
           : size // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as List<Size>?,
       color: color == freezed
           ? _value.color
           : color // ignore: cast_nullable_to_non_nullable
@@ -202,10 +210,11 @@ abstract class _$$_ProductCopyWith<$Res> implements $ProductCopyWith<$Res> {
       String photo2,
       String photo3,
       String name,
+      @JsonKey(nullable: true, defaultValue: "") String? brandName,
       String description,
       int price,
       @JsonKey(defaultValue: 0) int? discountPrice,
-      @JsonKey(nullable: true) String? size,
+      @JsonKey(nullable: true, defaultValue: []) List<Size>? size,
       @JsonKey(nullable: true) String? color,
       @JsonKey(defaultValue: 0) int? requirePoint,
       @JsonKey(nullable: true) String? advertisementID,
@@ -234,6 +243,7 @@ class __$$_ProductCopyWithImpl<$Res> extends _$ProductCopyWithImpl<$Res>
     Object? photo2 = freezed,
     Object? photo3 = freezed,
     Object? name = freezed,
+    Object? brandName = freezed,
     Object? description = freezed,
     Object? price = freezed,
     Object? discountPrice = freezed,
@@ -270,6 +280,10 @@ class __$$_ProductCopyWithImpl<$Res> extends _$ProductCopyWithImpl<$Res>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
+      brandName: brandName == freezed
+          ? _value.brandName
+          : brandName // ignore: cast_nullable_to_non_nullable
+              as String?,
       description: description == freezed
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
@@ -283,9 +297,9 @@ class __$$_ProductCopyWithImpl<$Res> extends _$ProductCopyWithImpl<$Res>
           : discountPrice // ignore: cast_nullable_to_non_nullable
               as int?,
       size: size == freezed
-          ? _value.size
+          ? _value._size
           : size // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as List<Size>?,
       color: color == freezed
           ? _value.color
           : color // ignore: cast_nullable_to_non_nullable
@@ -331,7 +345,8 @@ class __$$_ProductCopyWithImpl<$Res> extends _$ProductCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
+@JsonSerializable(explicitToJson: true)
 class _$_Product implements _Product {
   _$_Product(
       {required this.id,
@@ -339,10 +354,11 @@ class _$_Product implements _Product {
       required this.photo2,
       required this.photo3,
       required this.name,
+      @JsonKey(nullable: true, defaultValue: "") this.brandName,
       required this.description,
       required this.price,
       @JsonKey(defaultValue: 0) this.discountPrice,
-      @JsonKey(nullable: true) this.size,
+      @JsonKey(nullable: true, defaultValue: []) final List<Size>? size,
       @JsonKey(nullable: true) this.color,
       @JsonKey(defaultValue: 0) this.requirePoint,
       @JsonKey(nullable: true) this.advertisementID,
@@ -353,7 +369,8 @@ class _$_Product implements _Product {
       @JsonKey(nullable: true) this.deliveryTime,
       @JsonKey(defaultValue: 0) this.love,
       @JsonKey(defaultValue: []) final List<String>? comment})
-      : _tags = tags,
+      : _size = size,
+        _tags = tags,
         _comment = comment;
 
   factory _$_Product.fromJson(Map<String, dynamic> json) =>
@@ -370,15 +387,25 @@ class _$_Product implements _Product {
   @override
   final String name;
   @override
+  @JsonKey(nullable: true, defaultValue: "")
+  final String? brandName;
+  @override
   final String description;
   @override
   final int price;
   @override
   @JsonKey(defaultValue: 0)
   final int? discountPrice;
+  final List<Size>? _size;
   @override
-  @JsonKey(nullable: true)
-  final String? size;
+  @JsonKey(nullable: true, defaultValue: [])
+  List<Size>? get size {
+    final value = _size;
+    if (value == null) return null;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
   @override
   @JsonKey(nullable: true)
   final String? color;
@@ -419,7 +446,7 @@ class _$_Product implements _Product {
 
   @override
   String toString() {
-    return 'Product(id: $id, photo1: $photo1, photo2: $photo2, photo3: $photo3, name: $name, description: $description, price: $price, discountPrice: $discountPrice, size: $size, color: $color, requirePoint: $requirePoint, advertisementID: $advertisementID, status: $status, category: $category, tags: $tags, dateTime: $dateTime, deliveryTime: $deliveryTime, love: $love, comment: $comment)';
+    return 'Product(id: $id, photo1: $photo1, photo2: $photo2, photo3: $photo3, name: $name, brandName: $brandName, description: $description, price: $price, discountPrice: $discountPrice, size: $size, color: $color, requirePoint: $requirePoint, advertisementID: $advertisementID, status: $status, category: $category, tags: $tags, dateTime: $dateTime, deliveryTime: $deliveryTime, love: $love, comment: $comment)';
   }
 
   @override
@@ -432,12 +459,13 @@ class _$_Product implements _Product {
             const DeepCollectionEquality().equals(other.photo2, photo2) &&
             const DeepCollectionEquality().equals(other.photo3, photo3) &&
             const DeepCollectionEquality().equals(other.name, name) &&
+            const DeepCollectionEquality().equals(other.brandName, brandName) &&
             const DeepCollectionEquality()
                 .equals(other.description, description) &&
             const DeepCollectionEquality().equals(other.price, price) &&
             const DeepCollectionEquality()
                 .equals(other.discountPrice, discountPrice) &&
-            const DeepCollectionEquality().equals(other.size, size) &&
+            const DeepCollectionEquality().equals(other._size, _size) &&
             const DeepCollectionEquality().equals(other.color, color) &&
             const DeepCollectionEquality()
                 .equals(other.requirePoint, requirePoint) &&
@@ -462,10 +490,11 @@ class _$_Product implements _Product {
         const DeepCollectionEquality().hash(photo2),
         const DeepCollectionEquality().hash(photo3),
         const DeepCollectionEquality().hash(name),
+        const DeepCollectionEquality().hash(brandName),
         const DeepCollectionEquality().hash(description),
         const DeepCollectionEquality().hash(price),
         const DeepCollectionEquality().hash(discountPrice),
-        const DeepCollectionEquality().hash(size),
+        const DeepCollectionEquality().hash(_size),
         const DeepCollectionEquality().hash(color),
         const DeepCollectionEquality().hash(requirePoint),
         const DeepCollectionEquality().hash(advertisementID),
@@ -496,10 +525,11 @@ abstract class _Product implements Product {
       required final String photo2,
       required final String photo3,
       required final String name,
+      @JsonKey(nullable: true, defaultValue: "") final String? brandName,
       required final String description,
       required final int price,
       @JsonKey(defaultValue: 0) final int? discountPrice,
-      @JsonKey(nullable: true) final String? size,
+      @JsonKey(nullable: true, defaultValue: []) final List<Size>? size,
       @JsonKey(nullable: true) final String? color,
       @JsonKey(defaultValue: 0) final int? requirePoint,
       @JsonKey(nullable: true) final String? advertisementID,
@@ -524,6 +554,9 @@ abstract class _Product implements Product {
   @override
   String get name => throw _privateConstructorUsedError;
   @override
+  @JsonKey(nullable: true, defaultValue: "")
+  String? get brandName => throw _privateConstructorUsedError;
+  @override
   String get description => throw _privateConstructorUsedError;
   @override
   int get price => throw _privateConstructorUsedError;
@@ -531,8 +564,8 @@ abstract class _Product implements Product {
   @JsonKey(defaultValue: 0)
   int? get discountPrice => throw _privateConstructorUsedError;
   @override
-  @JsonKey(nullable: true)
-  String? get size => throw _privateConstructorUsedError;
+  @JsonKey(nullable: true, defaultValue: [])
+  List<Size>? get size => throw _privateConstructorUsedError;
   @override
   @JsonKey(nullable: true)
   String? get color => throw _privateConstructorUsedError;
