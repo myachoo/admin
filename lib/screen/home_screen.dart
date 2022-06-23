@@ -4,11 +4,13 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:kozarni_ecome/controller/home_controller.dart';
 import 'package:kozarni_ecome/screen/shop.dart';
+import 'package:kozarni_ecome/screen/view/favourite.dart';
 import 'package:kozarni_ecome/screen/view/hot.dart';
 import 'package:kozarni_ecome/screen/view/home.dart';
 import 'package:kozarni_ecome/widgets/bottom_nav.dart';
 import 'package:kozarni_ecome/widgets/home_appbar/home_app_bar.dart';
 
+import 'cart.dart';
 import 'view/profile.dart';
 
 List<Widget> _template = [
@@ -16,8 +18,8 @@ List<Widget> _template = [
   Shop(),
   HotView(),
   // BrandView(),
-  // CartView(),
-  // FavouriteView(),
+  CartView(),
+  FavouriteView(),
   ProfileView(),
 ];
 

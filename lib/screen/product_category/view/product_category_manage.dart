@@ -23,14 +23,24 @@ class ProductCategoryManagement extends StatefulWidget {
 class _ProductCategoryManagementState extends State<ProductCategoryManagement> {
   late Input input;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  String selectedMainId = "";
   
   @override
   void initState() {
+    selectedMainId = widget.category?.mainId??"";
     input = Input(input: {
       "name": TextEditingController()..text = widget.category?.name ?? "",
       "image": TextEditingController()..text = widget.category?.image ?? "",
     });
     super.initState();
+  }
+
+  void selectId(String value){
+    if(mounted){
+      setState((){
+        selectedMainId = value;
+      });
+    }
   }
 
   @override
@@ -67,7 +77,8 @@ class _ProductCategoryManagementState extends State<ProductCategoryManagement> {
                 Category(
                   name: input.input["name"]?.value.text ?? "", 
                   image: input.input["image"]?.value.text ?? "",
-                  id: widget.category?.id ?? Uuid().v1(), 
+                  id: widget.category?.id ?? Uuid().v1(),
+                  mainId: selectedMainId,
                   dateTime: DateTime.now(),
                   ),
               ),
@@ -134,6 +145,38 @@ class _ProductCategoryManagementState extends State<ProductCategoryManagement> {
                 ],
               ),
             ),
+            //ToSelectMainCategory
+            SizedBox(
+          height: 50,
+              child: ListView.builder(
+                  padding: EdgeInsets.only(left: 20),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: mainCategoryList.length,
+                  itemBuilder: (_, i) {
+    final tag = mainCategoryList[i];
+                    final equal = selectedMainId==tag;
+
+                    return Container(
+                      margin: EdgeInsets.only(
+                        top: 3,
+                        bottom: 3,
+                        right: 20,
+                      ),
+                      child: ChoiceChip(
+                              selectedColor: homeIndicatorColor,
+                              onSelected: (v) => selectId(tag),
+                              label: Text(
+                                tag,
+                                style: TextStyle(
+                                  color: equal ? Colors.white: Colors.grey,
+                                ),
+                              ),
+                              selected: equal,
+                            ),
+
+                    );}
+              ),
+            )
           ],
         ),
       ),      

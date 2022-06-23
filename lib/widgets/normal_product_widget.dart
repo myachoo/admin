@@ -38,7 +38,7 @@ class NormalProductWidget extends StatelessWidget {
                                       child: Hero(
                                         tag: product.photo1,
                                         child: ClipRRect(
-                                          borderRadius: BorderRadius.circular(20.0),
+                                          borderRadius: BorderRadius.circular(10.0),
                                           child: CachedNetworkImage(
                                             imageUrl: product.photo1,
                                             fit: BoxFit.cover,
@@ -89,7 +89,7 @@ class NormalProductWidget extends StatelessWidget {
                                                       padding: const EdgeInsets.only(
                                                         left: 5,
                                                         right: 5,
-                                                        bottom: 10,
+                                                        bottom: 5,
                                                         top: 2,
                                                       ),
                                                       child: Text(

@@ -8,6 +8,8 @@ class Category with _$Category{
   factory Category({
     required String name,
     required String id,
+    @JsonKey(nullable: true,defaultValue: "")
+    String? mainId,
     @JsonKey(nullable: true, defaultValue: "")
     String? image,
     required DateTime dateTime,

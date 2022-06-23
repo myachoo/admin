@@ -109,7 +109,7 @@ class DetailScreen extends StatelessWidget {
                       Row(
                         children: List.generate(
                           5,
-                          (index) => Icon(
+                              (index) => Icon(
                             Icons.star,
                             size: 20,
                             color: index <= (currentProduct.love ?? 0)
@@ -121,10 +121,10 @@ class DetailScreen extends StatelessWidget {
                       //Favourite Icon
                       ValueListenableBuilder(
                         valueListenable:
-                            Hive.box<HiveItem>(boxName).listenable(),
+                        Hive.box<HiveItem>(boxName).listenable(),
                         builder: (context, Box<HiveItem> box, widget) {
                           final currentObj =
-                              box.get(currentProduct.id);
+                          box.get(currentProduct.id);
 
                           if (!(currentObj == null)) {
                             return IconButton(
@@ -406,23 +406,23 @@ class DetailScreen extends StatelessWidget {
             if((currentProduct.color == null) && (currentProduct.size == null || (currentProduct.size?.isEmpty == true))){
               //------Add to Cart-------//
               controller.addToCart(currentProduct,price: currentProduct.price);
-                Get.back();
+              Get.back();
             }else{
               showModalBottomSheet(
-              context: context,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20),
-              )),
-              builder: (context) {
-                return AddToCart(
-                  sizePriceList: currentProduct.size ?? [],
-                  imageUrl: currentProduct.photo1,
-                  color: currentProduct.color ?? "No Color",
-                );
-              },
-            );
+                context: context,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20),
+                    )),
+                builder: (context) {
+                  return AddToCart(
+                    sizePriceList: currentProduct.size ?? [],
+                    imageUrl: currentProduct.photo1,
+                    color: currentProduct.color ?? "No Color",
+                  );
+                },
+              );
             }
           },
           child: Text("၀ယ်ယူရန်"),
@@ -467,27 +467,27 @@ class _AddToCartState extends State<AddToCart> {
             children: [
               //Product Image
               ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child:
-                      CachedNetworkImage(
-                                      imageUrl: widget.imageUrl,
-                                      width: 100,
-                                      height: 100,
-                                      progressIndicatorBuilder:
-                                          (context, url, status) {
-                                        return Center(
-                                          child: SizedBox(
-                                            width: 50,
-                                            height: 50,
-                                            child: CircularProgressIndicator(
-                                              value: status.progress,
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                      errorWidget: (context, url, error) =>
-                                          const Icon(Icons.error),
-                                    ),),
+                borderRadius: BorderRadius.circular(10),
+                child:
+                CachedNetworkImage(
+                  imageUrl: widget.imageUrl,
+                  width: 100,
+                  height: 100,
+                  progressIndicatorBuilder:
+                      (context, url, status) {
+                    return Center(
+                      child: SizedBox(
+                        width: 50,
+                        height: 50,
+                        child: CircularProgressIndicator(
+                          value: status.progress,
+                        ),
+                      ),
+                    );
+                  },
+                  errorWidget: (context, url, error) =>
+                  const Icon(Icons.error),
+                ),),
               Text(
                 sizePrice?.size ?? "",
                 textAlign: TextAlign.left,
@@ -573,12 +573,12 @@ class _AddToCartState extends State<AddToCart> {
               items: widget.color
                   .split(',')
                   .map((e) => DropdownMenuItem(
-                        value: e,
-                        child: Text(
-                          e,
-                          style: TextStyle(fontSize: 12),
-                        ),
-                      ))
+                value: e,
+                child: Text(
+                  e,
+                  style: TextStyle(fontSize: 12),
+                ),
+              ))
                   .toList(),
             ),
           ),

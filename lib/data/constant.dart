@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 const Color scaffoldBackground = Colors.white;
 const Color appBarColor = Colors.white;
 const Color appBarTitleColor = Color.fromRGBO(19, 19, 19, 1);
-const Color homeIndicatorColor = Color.fromRGBO(247, 98, 16, 1);
+const Color homeIndicatorColor = Colors.orangeAccent;
 const Color detailBackgroundColor = Colors.white;
 const Color detailTextBackgroundColor = Colors.white;
 ButtonStyle buttonStyle = ButtonStyle(
-  backgroundColor: MaterialStateProperty.all(Colors.orange),
+  backgroundColor: MaterialStateProperty.all(Colors.orangeAccent),
 );
 
 const String baseUrl = 'http://192.168.1.5:5000/api/v1/streaming/movie/';
@@ -41,4 +41,10 @@ const String forRewardProducts = "For Reward Products";
 const String forNewProducts = "For New Products";
 
 const String purchaseBox = "purchasesBoxs";
+
+const List<String> mainCategoryList=[
+  "တရုတ်",
+  "ယိုးဒယား",
+  "အိန္ဒိယ",
+];
 

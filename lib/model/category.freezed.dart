@@ -23,6 +23,8 @@ mixin _$Category {
   String get name => throw _privateConstructorUsedError;
   String get id => throw _privateConstructorUsedError;
   @JsonKey(nullable: true, defaultValue: "")
+  String? get mainId => throw _privateConstructorUsedError;
+  @JsonKey(nullable: true, defaultValue: "")
   String? get image => throw _privateConstructorUsedError;
   DateTime get dateTime => throw _privateConstructorUsedError;
 
@@ -39,6 +41,7 @@ abstract class $CategoryCopyWith<$Res> {
   $Res call(
       {String name,
       String id,
+      @JsonKey(nullable: true, defaultValue: "") String? mainId,
       @JsonKey(nullable: true, defaultValue: "") String? image,
       DateTime dateTime});
 }
@@ -55,6 +58,7 @@ class _$CategoryCopyWithImpl<$Res> implements $CategoryCopyWith<$Res> {
   $Res call({
     Object? name = freezed,
     Object? id = freezed,
+    Object? mainId = freezed,
     Object? image = freezed,
     Object? dateTime = freezed,
   }) {
@@ -67,6 +71,10 @@ class _$CategoryCopyWithImpl<$Res> implements $CategoryCopyWith<$Res> {
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
+      mainId: mainId == freezed
+          ? _value.mainId
+          : mainId // ignore: cast_nullable_to_non_nullable
+              as String?,
       image: image == freezed
           ? _value.image
           : image // ignore: cast_nullable_to_non_nullable
@@ -88,6 +96,7 @@ abstract class _$$_CategoryCopyWith<$Res> implements $CategoryCopyWith<$Res> {
   $Res call(
       {String name,
       String id,
+      @JsonKey(nullable: true, defaultValue: "") String? mainId,
       @JsonKey(nullable: true, defaultValue: "") String? image,
       DateTime dateTime});
 }
@@ -106,6 +115,7 @@ class __$$_CategoryCopyWithImpl<$Res> extends _$CategoryCopyWithImpl<$Res>
   $Res call({
     Object? name = freezed,
     Object? id = freezed,
+    Object? mainId = freezed,
     Object? image = freezed,
     Object? dateTime = freezed,
   }) {
@@ -118,6 +128,10 @@ class __$$_CategoryCopyWithImpl<$Res> extends _$CategoryCopyWithImpl<$Res>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
+      mainId: mainId == freezed
+          ? _value.mainId
+          : mainId // ignore: cast_nullable_to_non_nullable
+              as String?,
       image: image == freezed
           ? _value.image
           : image // ignore: cast_nullable_to_non_nullable
@@ -136,6 +150,7 @@ class _$_Category implements _Category {
   _$_Category(
       {required this.name,
       required this.id,
+      @JsonKey(nullable: true, defaultValue: "") this.mainId,
       @JsonKey(nullable: true, defaultValue: "") this.image,
       required this.dateTime});
 
@@ -148,13 +163,16 @@ class _$_Category implements _Category {
   final String id;
   @override
   @JsonKey(nullable: true, defaultValue: "")
+  final String? mainId;
+  @override
+  @JsonKey(nullable: true, defaultValue: "")
   final String? image;
   @override
   final DateTime dateTime;
 
   @override
   String toString() {
-    return 'Category(name: $name, id: $id, image: $image, dateTime: $dateTime)';
+    return 'Category(name: $name, id: $id, mainId: $mainId, image: $image, dateTime: $dateTime)';
   }
 
   @override
@@ -164,6 +182,7 @@ class _$_Category implements _Category {
             other is _$_Category &&
             const DeepCollectionEquality().equals(other.name, name) &&
             const DeepCollectionEquality().equals(other.id, id) &&
+            const DeepCollectionEquality().equals(other.mainId, mainId) &&
             const DeepCollectionEquality().equals(other.image, image) &&
             const DeepCollectionEquality().equals(other.dateTime, dateTime));
   }
@@ -174,6 +193,7 @@ class _$_Category implements _Category {
       runtimeType,
       const DeepCollectionEquality().hash(name),
       const DeepCollectionEquality().hash(id),
+      const DeepCollectionEquality().hash(mainId),
       const DeepCollectionEquality().hash(image),
       const DeepCollectionEquality().hash(dateTime));
 
@@ -192,6 +212,7 @@ abstract class _Category implements Category {
   factory _Category(
       {required final String name,
       required final String id,
+      @JsonKey(nullable: true, defaultValue: "") final String? mainId,
       @JsonKey(nullable: true, defaultValue: "") final String? image,
       required final DateTime dateTime}) = _$_Category;
 
@@ -201,6 +222,9 @@ abstract class _Category implements Category {
   String get name => throw _privateConstructorUsedError;
   @override
   String get id => throw _privateConstructorUsedError;
+  @override
+  @JsonKey(nullable: true, defaultValue: "")
+  String? get mainId => throw _privateConstructorUsedError;
   @override
   @JsonKey(nullable: true, defaultValue: "")
   String? get image => throw _privateConstructorUsedError;

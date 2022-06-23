@@ -8,72 +8,53 @@ class OnBoardingPage extends StatelessWidget {
     child: IntroductionScreen(
       pages: [
         PageViewModel(
-          title: "CINDY BRANDED FASHION SHOP",
-          body: ''' EXPORT QUALITY
+          title: "",
+          body: '''မြန်မာဖိနပ် နှင့် နိုင်ငံခြားဖိနပ်အမျိုးမျိုး လက်ကားအရောင်းဆိုင်''',
+          image: buildImage('assets/logotr.png'),
+          decoration: getPageDecoration(),
+        ),
+
+        PageViewModel(
+          title: "",
+          body: '''❤ မြခြူးမိသားစုမှ သူဌေးလောင်းများကို 
           
-MADE IN MYANMAR
-
-FAIR PRICE
-
-EXPORT CLOTHING
-
-EXPORT FASHION
-
-CINDY EXPORT FASHION
-
-CINDY BRANDED EXPORT FASHION''',
-          image: buildImage('assets/shopping.jpeg'),
-          decoration: getPageDecoration(),
-        ),
-
-        PageViewModel(
-          title: "CINDY BRANDED FASHION SHOP",
-          body: ''' 
-          𝐂𝐢𝐧𝐝𝐲 ဆိုတာ 
-          🌿 ️တစ်နေကုန် အေးမြမယ်...
-          🌿 ️ပေါ့ပါးမယ်..
-          🌿 ️သက်သောင့်သက်သာရှိမယ်...
-          🌿 ️ရိုးရှင်းစွာလှပမယ်...
-          🌿 ️ဘောင်းဘီနဲ့ဝတ်ဝတ် 
-          🌿 စကပ်နဲ့ဝတ်ဝတ်လှနေမယ်..
-          🌿 ️ဘယ်နေရာသွားသွား 
-          🌿 ဝတ်လို့ရစေရမယ်...
-          🌿 ️ဈေးနှုန်းသက်သာမယ်...''',
-          image: buildImage('assets/1.png'),
+          ဖိတ်ခေါ်နေပါတယ် ❤️''',
+          image: buildImage('assets/logotr.png'),
           decoration: getPageDecoration(),
         ),
         PageViewModel(
-          title: 'EVERYTIME YOU WILL NEED MY CINDY',
-          body: '''
-          🌿  ခရီးထွက်ကြတဲ့အခါ...
-          🌿  Shopping ထွကိကြတဲ့အခါ...
-          🌿  မုန့်ထွက်စားကြတဲ့အခါ...
-          🌿 လျှောက်လည်တဲ့အခါတိုင်း 
-          ❝   𝐂𝐢𝐧𝐝𝐲 ကို သတိရလိုက်ပါနော်  ❞ ''',
-          image: buildImage('assets/2.png'),
+          title: '',
+          body: '''🏠 ဆိုင်လိပ်စာလေးကတော့….
+          
+အမှတ် ၂၁၇ - ၂၃၆ ၊ ၊ ၂၉လမ်း အထက် ၊ 
+ပန်းဘဲတန်းမြို့နယ်၊ ရန်ကုန်မြို့။''',
+          image: buildImage('assets/logotr.png'),
           decoration: getPageDecoration(),
         ),
         PageViewModel(
-          title: "EVERYTIME YOU WILL NEED MY CINDY",
-          body: '''
-          🌧  မိုးလေးကလဲရွာ....
-          💨  လေလေးကလဲတိုက်....
-          🤔  ဘာဝတ်ပြီး အပြင်ထွက်ရမလဲနော် ❓''',
-          image: buildImage('assets/4.png'),
+          title: "",
+          body: '''☎ ဆက်သွယ်ရန် 
+     ဖုန်းနံပါတ်လေးတွေကတော့
+          
+09 265 700 006
+
+09 796 700 006
+
+09 952 700 006''',
+          image: buildImage('assets/logotr.png'),
           decoration: getPageDecoration(),
         ),
         PageViewModel(
-          title: 'HAPPY AND ONLY MY CINDY',
-          body: ''' ❝  အမြဲတမ်း လွတ်လပ်ပေါ့ပါးနေစေဖို့
-              𝐂𝐢𝐧𝐝𝐲 ဝတ်ကြစို့  ❞ ''',
+          title: '',
+          body: ''' ❝  အခုလိုမျိုး ရွေးချယ်စရာတွေအများကြီးရှိတဲ့ အထဲကမှ မင်မင်တို့ရဲ့ "မြခြူး" တံဆိပ်ကို ယုံယုံကြည်ကြည်နဲ့ ရွေးချယ်ပေးခဲ့လို့ ကျေးဇူးအထူးတင်ပါတယ် ❞ ''',
           footer: Padding(
-            padding: const EdgeInsets.only(top: 10),
+            padding: const EdgeInsets.only(top: 0),
             child: ButtonWidget(
               text: "LET'S GET STARTED",
               onClicked: () => goToHome(context),
             ),
           ),
-          image: buildImage('assets/3.png'),
+          image: buildImage('assets/logotr.png'),
           decoration: getPageDecoration(),
         ),
       ],
@@ -101,7 +82,7 @@ CINDY BRANDED EXPORT FASHION''',
   );
 
   Widget buildImage(String path) =>
-      Center(child: Image.asset(path, width: 350));
+      Center(child: Image.asset(path, width: 250));
 
   DotsDecorator getDotDecoration() => DotsDecorator(
     color: Colors.indigo,
@@ -115,7 +96,7 @@ CINDY BRANDED EXPORT FASHION''',
 
   PageDecoration getPageDecoration() => PageDecoration(
     titleTextStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-    titlePadding: EdgeInsets.only(top: 20),
+    titlePadding: EdgeInsets.only(top: 0),
     descriptionPadding: EdgeInsets.only(top: 30).copyWith(bottom: 0),
     imagePadding: EdgeInsets.only(top: 30),
     pageColor: Colors.white,
@@ -136,7 +117,7 @@ class ButtonWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) => RaisedButton(
     onPressed: onClicked,
-    color: Colors.orange,
+    color: Colors.orangeAccent,
     shape: StadiumBorder(),
     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
     child: Text(text,

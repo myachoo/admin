@@ -22,7 +22,6 @@ class CartView extends StatelessWidget {
     controller.updateSubTotal(false); //Make Sure To Update SubTotal
 
     return Scaffold(
-      appBar: HomeAppBar(),
       body: Column(
         children: [
           Obx(
@@ -32,7 +31,7 @@ class CartView extends StatelessWidget {
                   itemBuilder: (_, i) {
                     String photo =
                         controller.getItem(controller.myCart[i].id)!.photo1;
-    
+
                     return Card(
                       margin: EdgeInsets.only(top: 10, left: 10, right: 10),
                       child: Row(
@@ -80,7 +79,7 @@ class CartView extends StatelessWidget {
                                 ],
                                 SizedBox(height: 5),
                                 Text(
-                                  "${controller.myCart[i].discountPrice! > 0 ? controller.myCart[i].discountPrice! : 
+                                  "${controller.myCart[i].discountPrice! > 0 ? controller.myCart[i].discountPrice! :
                                   controller.myCart[i].requirePoint! > 0 ? controller.myCart[i].requirePoint! : controller.myCart[i].price}"
                                   "${controller.myCart[i].requirePoint! > 0 ? 'မှတ်' : 'ကျပ်'}",
                                   style: TextStyle(fontSize: 12),
@@ -115,7 +114,7 @@ class CartView extends StatelessWidget {
                 ),
               ) : const SizedBox(),
             ),
-    
+
           GetBuilder<HomeController>(builder: (controller) {
             return Container(
               width: double.infinity,
@@ -164,7 +163,7 @@ class CartView extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-    
+
                           //DropDown TownShip List
                           Container(
                             width: 250,
@@ -196,8 +195,8 @@ class CartView extends StatelessWidget {
                                   //DropDown Icon
                                   Expanded(
                                       child: Icon(FontAwesomeIcons.angleRight)),
-    
-    
+
+
                                 ]),
                               );
                             }),
@@ -344,7 +343,7 @@ class CartView extends StatelessWidget {
                     },
                     child: AnimatedContainer(
                       color: controller.mouseIndex == divisionIndex
-                          ? Colors.orange
+                          ? Colors.orangeAccent
                           : Colors.white,
                       duration: const Duration(milliseconds: 200),
                       child:

@@ -52,7 +52,7 @@ class _ProductCategoryViewState extends State<ProductCategoryView> {
                         var cate = _homeController.categories[index];
 
                         return InkWell(
-                          onTap: () => Get.to(ProductCategoryManagement(cate)),
+                          onTap: () => Get.to(()=>ProductCategoryManagement(cate)),
                           child: ConstrainedBox(
                             constraints: BoxConstraints(
                               minHeight: 150,

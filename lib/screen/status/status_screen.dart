@@ -30,7 +30,7 @@ class _StatusScreenState extends State<StatusScreen> {
         appBar: AppBar(
           backgroundColor: appBarColor,
           iconTheme: IconThemeData(color: Colors.black),
-          title: const Center(child: Text("အဆင့် အုပ်စုများ",style: appBarTitleStyle,)),
+          title: const Center(child: Text("Status အုပ်စုများ",style: appBarTitleStyle,)),
         ),
         body: Padding(
           padding: const EdgeInsets.only(

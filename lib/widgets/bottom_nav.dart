@@ -40,11 +40,13 @@ class BottomNav extends StatelessWidget {
                     icon: FaIcon(
                       FontAwesomeIcons.home,
                       color: controller.navIndex.value == 0
-                          ? Colors.black
+                          ? Colors.orangeAccent
                           : Colors.grey,
                     ),
                   ),
-                  Text("Home"),
+                  Text("Home",
+                    style: TextStyle(
+                      fontSize: 13,),),
                 ],
               ),
             ),
@@ -56,12 +58,16 @@ class BottomNav extends StatelessWidget {
                      controller.changeNav(1);
                     },
                     icon: FaIcon(
-                      FontAwesomeIcons.shoppingBag,
-                      color: 
-                           Colors.grey,
+                      FontAwesomeIcons.list,
+                      color: controller.navIndex.value == 1
+                          ? Colors.orangeAccent
+                          : Colors.grey,
                     ),
                   ),
-                  Text("Shop"),
+                  Text("Categories",
+                  style: TextStyle(
+                    fontSize: 13,
+                  ),),
                 ],
               ),
             ),
@@ -77,65 +83,19 @@ class BottomNav extends StatelessWidget {
                         FaIcon(
                           FontAwesomeIcons.tag,
                           color: controller.navIndex.value == 2
-                              ? Colors.black
+                              ? Colors.orangeAccent
                               : Colors.grey,
                         ),
                       ],
                     ),
                   ),
-                  Text("Offers"),
+                  Text("Offers",
+                    style: TextStyle(
+                      fontSize: 13,
+                    ),),
                 ],
               ),
             ),
-            // Expanded(
-            //   child: Column(
-            //     children: [
-            //       IconButton(
-            //         onPressed: () {
-            //           controller.changeNav(2);
-            //         },
-            //         icon: Stack(
-            //           children: [
-            //             FaIcon(
-            //               FontAwesomeIcons.shoppingCart,
-            //               color: controller.navIndex.value == 2
-            //                   ? Colors.black
-            //                   : Colors.grey,
-            //             ),
-            //             CircleAvatar(
-            //                 backgroundColor: Colors.orange,
-            //                 minRadius: 0,
-            //                 maxRadius: 10,
-            //                 child: Text(
-            //                   controller.myCart.length.toString(),
-            //                   style:
-            //                       TextStyle(color: Colors.white, fontSize: 14),
-            //                 )),
-            //           ],
-            //         ),
-            //       ),
-            //       Text("Cart"),
-            //     ],
-            //   ),
-            // ),
-            // Expanded(
-            //   child: Column(
-            //     children: [
-            //       IconButton(
-            //         onPressed: () {
-            //           controller.changeNav(3);
-            //         },
-            //         icon: Icon(
-            //           FontAwesomeIcons.solidHeart,
-            //           color: controller.navIndex.value == 3
-            //               ? Colors.black
-            //               : Colors.grey,
-            //         ),
-            //       ),
-            //       Text("Favourite"),
-            //     ],
-            //   ),
-            // ),
             Expanded(
               child: Column(
                 children: [
@@ -143,14 +103,72 @@ class BottomNav extends StatelessWidget {
                     onPressed: () {
                       controller.changeNav(3);
                     },
-                    icon: FaIcon(
-                      FontAwesomeIcons.user,
-                      color: controller.navIndex.value == 3
-                          ? Colors.black
+                    icon: Stack(
+                      children: [
+                        FaIcon(
+                          FontAwesomeIcons.shoppingCart,
+                          color: controller.navIndex.value == 3
+                              ? Colors.orangeAccent
+                              : Colors.grey,
+                        ),
+                        CircleAvatar(
+                            backgroundColor: Colors.orangeAccent,
+                            minRadius: 0,
+                            maxRadius: 10,
+                            child: Text(
+                              controller.myCart.length.toString(),
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 14),
+                            )),
+                      ],
+                    ),
+                  ),
+                  Text("Cart",
+                    style: TextStyle(
+                      fontSize: 13,
+                    ),),
+                ],
+              ),
+            ),
+            Expanded(
+              child: Column(
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      controller.changeNav(4);
+                    },
+                    icon: Icon(
+                      FontAwesomeIcons.solidHeart,
+                      color: controller.navIndex.value == 4
+                          ? Colors.orangeAccent
                           : Colors.grey,
                     ),
                   ),
-                  Text("Me"),
+                  Text("Favourite",
+                    style: TextStyle(
+                      fontSize: 13,
+                    ),),
+                ],
+              ),
+            ),
+            Expanded(
+              child: Column(
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      controller.changeNav(5);
+                    },
+                    icon: FaIcon(
+                      FontAwesomeIcons.user,
+                      color: controller.navIndex.value == 5
+                          ? Colors.orangeAccent
+                          : Colors.grey,
+                    ),
+                  ),
+                  Text("Account",
+                    style: TextStyle(
+                      fontSize: 13,
+                    ),),
                 ],
               ),
             ),

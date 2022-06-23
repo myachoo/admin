@@ -16,13 +16,14 @@ class HomeAppBar extends StatelessWidget with PreferredSizeWidget{
         backgroundColor: appBarColor,
         elevation: 0,
         title: Text(
-          "DELUX BEAUTI",
+          "မြခြူး Mya Choo",
           style: TextStyle(
-            fontSize: 18,
+            fontSize: 20,
             fontWeight: FontWeight.bold,
-            color: appBarTitleColor,
+            color: Colors.red,
+            // fontStyle: FontStyle.italic,
             wordSpacing: 2,
-            letterSpacing: 2,
+            letterSpacing: 1,
           ),
         ),
         // centerTitle: true,
@@ -70,77 +71,49 @@ class HomeAppBar extends StatelessWidget with PreferredSizeWidget{
               ),
               onPressed: () async {
                 try {
-                  await launch('https://m.me/Cindy.Branded.Export.Fashion');
+                  await launch('https://m.me/myachoonagar');
                 } catch (e) {
                   print(e);
                 }
               },
               child: FaIcon(
-                FontAwesomeIcons.commentDots,
-                color: Colors.black,
+                FontAwesomeIcons.facebookMessenger,
+                color: Colors.blue,
                 size: 23,
               ),
             ),
           ),
 
           SizedBox(
-            width: 45,
-            child: ElevatedButton(
-              style: ButtonStyle(
-                alignment: Alignment.center,
-                backgroundColor: MaterialStateProperty.all(Colors.white),
-                elevation: MaterialStateProperty.resolveWith<double>(
-                  // As you said you dont need elevation. I'm returning 0 in both case
-                      (Set<MaterialState> states) {
-                    if (states.contains(MaterialState.disabled)) {
-                      return 0;
-                    }
-                    return 0; // Defer to the widget's default.
-                  },
-                ),
-              ),
-              // onPressed: () async {
-              //   try {
-              //     await launch('https://m.me/Cindy.Branded.Export.Fashion');
-              //   } catch (e) {
-              //     print(e);
-              //   }
-              // },
-              onPressed: () => Get.toNamed(favouriteUrl),
-              child: FaIcon(
-                FontAwesomeIcons.heart,
-                color: Colors.black,
-                size: 23,
-              ),
-            ),
+            width: 20,
           ),
 
-          SizedBox(
-            width: 45,
-            child: ElevatedButton(
-              style: ButtonStyle(
-                alignment: Alignment.center,
-                backgroundColor: MaterialStateProperty.all(Colors.white),
-                elevation: MaterialStateProperty.resolveWith<double>(
-                  // As you said you dont need elevation. I'm returning 0 in both case
-                      (Set<MaterialState> states) {
-                    if (states.contains(MaterialState.disabled)) {
-                      return 0;
-                    }
-                    return 0; // Defer to the widget's default.
-                  },
-                ),
-              ),
-              onPressed: ()  {
-                Get.toNamed(cartUrl);
-              },
-              child: FaIcon(
-                FontAwesomeIcons.shoppingBasket,
-                color: Colors.black,
-                size: 23,
-              ),
-            ),
-          ),
+          // SizedBox(
+          //   width: 45,
+          //   child: ElevatedButton(
+          //     style: ButtonStyle(
+          //       alignment: Alignment.center,
+          //       backgroundColor: MaterialStateProperty.all(Colors.white),
+          //       elevation: MaterialStateProperty.resolveWith<double>(
+          //         // As you said you dont need elevation. I'm returning 0 in both case
+          //             (Set<MaterialState> states) {
+          //           if (states.contains(MaterialState.disabled)) {
+          //             return 0;
+          //           }
+          //           return 0; // Defer to the widget's default.
+          //         },
+          //       ),
+          //     ),
+          //     onPressed: ()  {
+          //       Get.toNamed(cartUrl);
+          //     },
+          //     child: FaIcon(
+          //       FontAwesomeIcons.shoppingBasket,
+          //       color: Colors.black,
+          //       size: 23,
+          //     ),
+          //   ),
+          // ),
 
 
         ],

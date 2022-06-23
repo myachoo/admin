@@ -52,7 +52,7 @@ class HomeCategoryMain extends StatelessWidget {
                           onPressed: () {
                             controller.setViewAllProducts(
                                                     ViewAllModel(
-                                                      status: "${cate.name} Products", 
+                                                      status: "${cate.name}",
                                                       products: controller.items.where((e) => e.category == cate.name).toList(),
                                                     )
                                                   );

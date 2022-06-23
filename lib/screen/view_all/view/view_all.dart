@@ -35,15 +35,19 @@ class _ViewAllScreenState extends State<ViewAllScreen> {
     final ViewAllController _viewAllController = Get.find();
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         automaticallyImplyLeading: false,
         backgroundColor: appBarColor,
         elevation: 0,
         title: Text(
-          "DELUX BEAUTI",
+          "မြခြူး Mya Choo",
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            color: appBarTitleColor,
+            color: Colors.red,
             wordSpacing: 2,
             letterSpacing: 2,
           ),
@@ -93,80 +97,20 @@ class _ViewAllScreenState extends State<ViewAllScreen> {
               ),
               onPressed: () async {
                 try {
-                  await launch('https://m.me/Cindy.Branded.Export.Fashion');
+                  await launch('https://m.me/myachoonagar');
                 } catch (e) {
                   print(e);
                 }
               },
               child: FaIcon(
-                FontAwesomeIcons.commentDots,
-                color: Colors.black,
+                FontAwesomeIcons.facebookMessenger,
+                color: Colors.blue,
                 size: 23,
               ),
             ),
           ),
 
-          SizedBox(
-            width: 45,
-            child: ElevatedButton(
-              style: ButtonStyle(
-                alignment: Alignment.center,
-                backgroundColor: MaterialStateProperty.all(Colors.white),
-                elevation: MaterialStateProperty.resolveWith<double>(
-                  // As you said you dont need elevation. I'm returning 0 in both case
-                      (Set<MaterialState> states) {
-                    if (states.contains(MaterialState.disabled)) {
-                      return 0;
-                    }
-                    return 0; // Defer to the widget's default.
-                  },
-                ),
-              ),
-              onPressed: () async {
-                try {
-                  await launch('https://m.me/Cindy.Branded.Export.Fashion');
-                } catch (e) {
-                  print(e);
-                }
-              },
-              child: FaIcon(
-                FontAwesomeIcons.heart,
-                color: Colors.black,
-                size: 23,
-              ),
-            ),
-          ),
-
-          SizedBox(
-            width: 45,
-            child: ElevatedButton(
-              style: ButtonStyle(
-                alignment: Alignment.center,
-                backgroundColor: MaterialStateProperty.all(Colors.white),
-                elevation: MaterialStateProperty.resolveWith<double>(
-                  // As you said you dont need elevation. I'm returning 0 in both case
-                      (Set<MaterialState> states) {
-                    if (states.contains(MaterialState.disabled)) {
-                      return 0;
-                    }
-                    return 0; // Defer to the widget's default.
-                  },
-                ),
-              ),
-              onPressed: () async {
-                try {
-                  await launch('https://m.me/Cindy.Branded.Export.Fashion');
-                } catch (e) {
-                  print(e);
-                }
-              },
-              child: FaIcon(
-                FontAwesomeIcons.shoppingBasket,
-                color: Colors.black,
-                size: 23,
-              ),
-            ),
-          ),
+          SizedBox(width: 20,),
 
 
         ],
@@ -180,11 +124,11 @@ class _ViewAllScreenState extends State<ViewAllScreen> {
             Text(
               "> ${_viewAllController.status}",
               style: TextStyle(
-            fontSize: 24,
+            fontSize: 16,
             fontWeight: FontWeight.bold,
             color: appBarTitleColor,
-            wordSpacing: 2,
-            letterSpacing: 2,
+            wordSpacing: 1,
+            letterSpacing: 1,
           ),
             ),
             const SizedBox(height: 10,),
@@ -201,16 +145,16 @@ class _ViewAllScreenState extends State<ViewAllScreen> {
                       return InkWell(
                         onTap: () => _viewAllController.refreshViewAll(),
                         child: CircleAvatar(
-                          radius: 25,
+                          radius: 23,
                           backgroundColor: isRefresh ? Colors.black : Colors.grey.shade300,
-                          child: Icon(FontAwesomeIcons.slidersH,size: 25, color:isRefresh ? Colors.white : Colors.black87,),
+                          child: Icon(FontAwesomeIcons.slidersH,size: 20, color:isRefresh ? Colors.white : Colors.black87,),
                           ),
                       );
                     }
                   ),
                   //Filter & Sort Options
                   SizedBox(
-                    height: 40,
+                    height: 35,
                     child: Padding(
                             padding: const EdgeInsets.only(left: 5,right: 5),
                             child: Obx(
@@ -224,7 +168,7 @@ class _ViewAllScreenState extends State<ViewAllScreen> {
                                     primary:isEqual ? Colors.black : Colors.grey.shade300,
                                     elevation: 0,
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                                      borderRadius: BorderRadius.all(Radius.circular(10)),
                                     )
                                   ),
                                   onPressed: () => showModalBottomSheet(

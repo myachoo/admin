@@ -60,7 +60,7 @@ class HomePickUp extends StatelessWidget {
                           alignment: Alignment.bottomCenter,
                           child: Container(
                             color: Colors.black.withOpacity(0.6),
-                            height: 100,
+                            height: 90,
                             width: double.infinity,
                             padding: EdgeInsets.all(10),
                             child: Column(

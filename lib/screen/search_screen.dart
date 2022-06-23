@@ -17,11 +17,15 @@ class SearchScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         automaticallyImplyLeading: false,
         backgroundColor: appBarColor,
         elevation: 0,
         title: Text(
-          "𝐂𝐢𝐧𝐝𝐲 Export & Clothing Brand Fashion",
+          "",
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.bold,
@@ -55,7 +59,7 @@ class SearchScreen extends StatelessWidget {
           //   ),
           // )
           Container(
-            width: MediaQuery.of(context).size.width * 0.6,
+            width: MediaQuery.of(context).size.width * 0.67,
             height: 50,
             child: TextField(
               autofocus: true,
@@ -84,7 +88,7 @@ class SearchScreen extends StatelessWidget {
             ),
             onPressed: () async {
               try {
-                await launch('https://m.me/Cindy.Branded.Export.Fashion');
+                await launch('https://m.me/myachoonagar');
               } catch (e) {
                 print(e);
               }
@@ -164,7 +168,7 @@ class SearchScreen extends StatelessWidget {
                                   children: [
                                     Padding(
                                       padding: const EdgeInsets.only(
-                                          top: 5, left: 24, right: 20),
+                                          top: 5, left: 20, right: 20),
                                       child: Text(
                                         controller.searchitems[i].name,
                                         maxLines: 1,
@@ -203,7 +207,7 @@ class SearchScreen extends StatelessWidget {
               )
             : Center(
                 child: Text(
-                  "Let's search what you want!",
+                  "လိုချင်တဲ့ဖိနပ်အမည်ကို ရှာဖွေနိုင်ပါသည်",
                   style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.bold,

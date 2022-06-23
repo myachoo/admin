@@ -15,12 +15,15 @@ class ProfileView extends StatelessWidget {
           ? _LoginUser()
           : ListView(
               children: [
-                Image.asset(
-                  "assets/shopping.jpeg",
-                  height: 200,
+                Padding(
+                  padding: const EdgeInsets.only(top: 50),
+                  child: Image.asset(
+                    "assets/logotr.png",
+                    height: 150,
+                  ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
+                  padding: const EdgeInsets.only(left: 20, right: 20, top: 30),
                   child: TextFormField(
                     controller: controller.phoneState.value
                         ? controller.verificationController
@@ -80,7 +83,7 @@ class _LoginUser extends StatelessWidget {
                       bottom: 20,
                     ),
                     child: Image.asset(
-                      "assets/shopping.jpeg",
+                      "assets/logotr.png",
                       width: 100,
                       height: 100,
                     ),

@@ -77,6 +77,10 @@ void setViewAllProducts(ViewAllModel value){
  final RxList<Advertisement> advertisementList = <Advertisement>[].obs;
  final RxList<Tag> tagsList = <Tag>[].obs;
 
+ List<Cate.Category> getSubcategoryByMainId(String value){
+   return categories.where((e) => e.mainId == value).toList();
+ }
+
  List<Product> getAdvertisementsProductList(Map<String,String> productMap){
    List<Product> resultList = [];
    for (var item in items) {
@@ -190,7 +194,7 @@ void setViewAllProducts(ViewAllModel value){
   }
 
   void addToCart(Product product,{ String? color, List<String>? size,required int price}) {
-    debugPrint("********current user point inside addToCart: $currentUserPoint*******");
+    debugPrint("********current user point inside addToCart: $price*******");
     if(product.requirePoint! > 0 && isCanAdd(product.requirePoint!)){
       currentUserPoint = currentUserPoint - (product.requirePoint! * 1);
     }else if(product.requirePoint! > 0 && 

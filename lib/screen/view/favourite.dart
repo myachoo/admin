@@ -21,7 +21,6 @@ class _FavouriteViewState extends State<FavouriteView> {
   Widget build(BuildContext context) {
     HomeController controller = Get.find();
     return Scaffold(
-      appBar: HomeAppBar(),
       body: ValueListenableBuilder(
         valueListenable: Hive.box<HiveItem>(boxName).listenable(),
         builder: (context, Box<HiveItem> box, widget) {
